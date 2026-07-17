@@ -5,6 +5,43 @@ repository. Read this entire file before writing any code. No exceptions.
 
 ---
 
+## Override Policy
+
+This file defines two categories of rules:
+
+**Fixed — never overridden by a project-level DESIGN.md:**
+- Directory structure and file ownership (`components/ui`, `lib`, `services`, `types`, `data`)
+- Import conventions (absolute imports, path aliases)
+- TypeScript discipline (no `any`, types live in `src/types/`)
+- Service-layer pattern (no direct `fetch()` in components/hooks, no direct `data/` imports in components)
+- Error handling (toast-based, no console.log/error)
+- Loading states (skeletons, not spinners)
+- Icon library (lucide-react)
+
+**Negotiable — a project's DESIGN.md may override these, but must say so explicitly:**
+- Animation library and motion rules (default: framer-motion)
+- Color tokens and their values (default: semantic tokens, values TBD per project)
+- Typography choices
+- Section/page structure and layout patterns
+
+A DESIGN.md that overrides a negotiable rule must state three things:
+1. The AGENTS.md default being changed
+2. The new project-specific rule
+3. The reason for the change (one line is enough)
+
+Example — the correct way to override the animation default:
+
+> **Overrides AGENTS.md → Animations:** AGENTS.md defaults to framer-motion
+> for everything. This project adds GSAP + ScrollTrigger for scroll-narrative
+> reveals (headline stagger, section entrances) because ScrollTrigger's
+> timeline control is a better fit for that pattern. Framer Motion still
+> owns discrete interactions — hover states, drawers, button micro-motion.
+
+If a DESIGN.md overrides a **Fixed** rule, that's a bug in DESIGN.md, not a
+valid override — flag it and ask before proceeding.
+
+---
+
 ## Skills Index — read the relevant skill before touching anything
 
 | Task                              | Read first                              |
@@ -29,8 +66,12 @@ src/
   hooks/                — all custom hooks, use-*.ts naming
   lib/                  — third party generated code (magicui, aceternity, etc).
                           Never manually edit or create files here.
-  services/             — every API call lives here, never in components or hooks
+  services/             — every API call and every data.ts lookup lives here,
+                          never in components or hooks
   types/                — all TypeScript types and interfaces
+  data/                 — mock/static content, one file per content section.
+                          [section].data.ts naming. Never imported directly
+                          by components — always via services/.
   redux/                — heavy or complex global state only
     store.ts
     hooks.ts            — typed useAppDispatch and useAppSelector
@@ -122,6 +163,10 @@ export default function UserCard(props: any) { ... }
 - Mobile-first always. Base styles first, then `md:` then `lg:`.
 - Every component must be dark mode friendly. Every color class needs a `dark:` variant
   if it doesn't already adapt via CSS variables.
+- AGENTS.md defines that semantic tokens must be used (`text-foreground`,
+  `bg-background`, etc.) but does not define their actual values. A
+  project's DESIGN.md owns the token values (the `@theme` block and `.dark`
+  overrides) — components never hardcode a value that belongs there.
 
 ---
 
@@ -137,7 +182,11 @@ export default function UserCard(props: any) { ... }
 
 ## Animations
 
-- framer-motion for all animations and transitions.
+- framer-motion for all animations and transitions, by default.
+- A project's DESIGN.md may add a second animation library for a specific,
+  named category of motion (see Override Policy). Framer Motion always
+  retains ownership of discrete interactions (hover, drawers, buttons)
+  unless DESIGN.md explicitly says otherwise.
 - No CSS transitions on interactive components — use framer-motion.
 - Keep animations subtle and purposeful: duration 0.2s–0.4s, ease-out.
 - Use `AnimatePresence` for mount/unmount transitions.
@@ -195,6 +244,52 @@ export const userService = {
 // ❌ Wrong
 const res = await fetch("/api/users")
 const data = await res.json()
+```
+
+---
+
+## Content Data
+
+- Static/mock content lives in `src/data/`, one file per content section.
+- File naming: `[section].data.ts` (e.g. `hero.data.ts`, `projects.data.ts`,
+  `team.data.ts`, `testimonials.data.ts`).
+- Every data file exports a typed const using a type from `src/types/`.
+  No untyped objects, no `any`.
+- Components never import from `src/data/` directly. They call a function
+  in `src/services/` that returns the data.
+- Service functions that read from `src/data/` always return a `Promise`,
+  even though the mock data is synchronous in memory. This keeps the
+  calling component identical whether the data comes from a local const
+  or a real backend later — only the service function body changes.
+- Today that service function just returns the mock const, wrapped in
+  `Promise.resolve`. Later, swapping to a real backend (Firestore, CMS,
+  API) means changing the function body only — the component and its
+  type never change.
+
+```ts
+// src/data/projects.data.ts
+import type { Project } from "@/types/project.types"
+
+export const projects: Project[] = [
+  {
+    id: "tree-plantation-2024",
+    title: "Tree Plantation Drive",
+    year: 2024,
+    category: "Environment",
+    image: "/images/projects/tree-plantation.jpg",
+  },
+]
+
+// src/services/project.service.ts
+import { projects } from "@/data/projects.data"
+import type { Project } from "@/types/project.types"
+
+export const projectService = {
+  getAll: (): Promise<Project[]> => Promise.resolve(projects),
+}
+
+// component (Server Component)
+const projects = await projectService.getAll()
 ```
 
 ---
@@ -262,6 +357,7 @@ console.error(error)
 - Do not use spinners for loading. Skeletons only.
 - Do not use react-icons or heroicons. lucide-react only.
 - Do not call `fetch()` in components or hooks. Services only.
+- Do not import from `src/data/` directly in a component. Services only.
 - Do not add CSS transitions on interactive elements. framer-motion only.
 - Do not rebuild `ThemeToggle`. It already exists in `components/layout/`.
 - Do not create files in `src/lib/` manually.
