@@ -11,9 +11,9 @@ import type { HeroContent } from "@/types/content.types";
 const ACTION_WORDS = ["Serve.", "Lead.", "Build.", "Connect.", "Change."];
 
 const STACK_CARDS = [
-  { label: "Youth Summit '24", color: "oklch(93% 0.025 65)", border: "oklch(57% 0.16 45)" },
-  { label: "Green Canopy '23", color: "oklch(91% 0.025 155)", border: "oklch(55% 0.14 148)" },
-  { label: "Beach Cleanup", color: "oklch(92% 0.025 250)", border: "oklch(57% 0.14 260)" },
+  { label: "Youth Summit '24", color: "oklch(93% 0.025 65)", border: "oklch(57% 0.16 45)", tag: "Leadership" },
+  { label: "Green Canopy '23", color: "oklch(91% 0.025 155)", border: "oklch(55% 0.14 148)", tag: "Environment" },
+  { label: "Beach Cleanup", color: "oklch(92% 0.025 250)", border: "oklch(57% 0.14 260)", tag: "Community" },
 ];
 
 function CyclingWord() {
@@ -43,81 +43,118 @@ function CyclingWord() {
 }
 
 function StackedImages() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setActiveIndex((i) => (i + 1) % STACK_CARDS.length);
+    }, 3000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Build ordered array: [back, middle, front] where front = activeIndex
+  const order = [
+    (activeIndex + 2) % STACK_CARDS.length,
+    (activeIndex + 1) % STACK_CARDS.length,
+    activeIndex,
+  ];
+
+  const positions = [
+    { rotate: 10, x: 28, y: -20, scale: 0.88, zIndex: 0 },
+    { rotate: 4, x: 10, y: 10, scale: 0.94, zIndex: 1 },
+    { rotate: -4, x: -10, y: 28, scale: 1, zIndex: 2 },
+  ];
+
   return (
     <div className="relative w-full h-full flex items-center justify-center">
-      {/* Card 3 — furthest back */}
-      <motion.div
-        initial={{ rotate: 10, x: 28, y: -20 }}
-        animate={{ rotate: 10, x: 28, y: -20 }}
-        whileHover={{ rotate: 14, x: 40, y: -28, transition: { duration: 0.3 } }}
-        className="absolute w-56 md:w-72 aspect-[3/4] rounded-2xl"
-        style={{
-          backgroundColor: STACK_CARDS[2].color,
-          border: `3px solid ${STACK_CARDS[2].border}`,
-          boxShadow: `0 8px 32px ${STACK_CARDS[2].border}30`,
-        }}
-      >
-        <div className="absolute inset-0 dot-grid opacity-40 rounded-2xl" />
-        <div className="absolute bottom-4 left-4 right-4">
-          <p className="font-heading font-bold text-sm text-text/60">{STACK_CARDS[2].label}</p>
-        </div>
-      </motion.div>
+      {order.map((cardIdx, posIdx) => {
+        const card = STACK_CARDS[cardIdx];
+        const pos = positions[posIdx];
+        const isFront = posIdx === 2;
 
-      {/* Card 2 — middle */}
-      <motion.div
-        initial={{ rotate: 4, x: 10, y: 10 }}
-        animate={{ rotate: 4, x: 10, y: 10 }}
-        whileHover={{ rotate: 6, x: 18, y: 14, transition: { duration: 0.3 } }}
-        className="absolute w-56 md:w-72 aspect-[3/4] rounded-2xl"
-        style={{
-          backgroundColor: STACK_CARDS[1].color,
-          border: `3px solid ${STACK_CARDS[1].border}`,
-          boxShadow: `0 8px 32px ${STACK_CARDS[1].border}30`,
-        }}
-      >
-        <div className="absolute inset-0 dot-grid opacity-40 rounded-2xl" />
-        <div className="absolute bottom-4 left-4 right-4">
-          <p className="font-heading font-bold text-sm text-text/60">{STACK_CARDS[1].label}</p>
-        </div>
-      </motion.div>
-
-      {/* Card 1 — front */}
-      <motion.div
-        initial={{ rotate: -4, x: -10, y: 28 }}
-        animate={{ rotate: -4, x: -10, y: 28 }}
-        whileHover={{ rotate: -6, x: -16, y: 34, transition: { duration: 0.3 } }}
-        className="relative w-56 md:w-72 aspect-[3/4] rounded-2xl overflow-hidden"
-        style={{
-          backgroundColor: STACK_CARDS[0].color,
-          border: `3px solid ${STACK_CARDS[0].border}`,
-          boxShadow: `0 16px 48px ${STACK_CARDS[0].border}40`,
-        }}
-      >
-        {/* Placeholder text watermark */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span
-            className="font-heading font-bold text-[5rem] leading-none select-none opacity-8 text-text"
+        return (
+          <motion.div
+            key={cardIdx}
+            layout
+            animate={{
+              rotate: pos.rotate,
+              x: pos.x,
+              y: pos.y,
+              scale: pos.scale,
+              zIndex: pos.zIndex,
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 28,
+              mass: 1,
+            }}
+            className="absolute w-56 md:w-72 aspect-[3/4] rounded-2xl overflow-hidden"
+            style={{
+              backgroundColor: card.color,
+              border: `3px solid ${card.border}`,
+              boxShadow: isFront
+                ? `0 16px 48px ${card.border}40`
+                : `0 8px 32px ${card.border}20`,
+            }}
           >
-            RC
-          </span>
-        </div>
-        <div className="absolute inset-0 dot-grid opacity-30 rounded-2xl" />
-        {/* Bottom label */}
-        <div
-          className="absolute bottom-0 left-0 right-0 px-4 pb-4 pt-8"
-          style={{ background: `linear-gradient(to top, ${STACK_CARDS[0].color}, transparent)` }}
-        >
-          <p className="font-heading font-bold text-sm text-text/80">{STACK_CARDS[0].label}</p>
-          <p className="font-sans text-xs text-text-muted mt-0.5">RCTNE × 2024</p>
-        </div>
-        {/* Corner sticker */}
-        <div
-          className="absolute top-4 right-4 px-2.5 py-1 rounded-full text-[10px] font-heading font-bold uppercase tracking-wider text-background"
-          style={{ backgroundColor: STACK_CARDS[0].border }}
-        >
-          Service
-        </div>
-      </motion.div>
+            {/* Background dot grid */}
+            <div className="absolute inset-0 dot-grid opacity-30 rounded-2xl" />
+
+            {/* RC watermark */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="font-heading font-bold text-[5rem] leading-none select-none opacity-[0.06] text-text">
+                RC
+              </span>
+            </div>
+
+            {/* Corner tag */}
+            <div
+              className="absolute top-4 right-4 px-2.5 py-1 rounded-full text-[10px] font-heading font-bold uppercase tracking-wider text-background"
+              style={{ backgroundColor: card.border }}
+            >
+              {card.tag}
+            </div>
+
+            {/* Bottom label with gradient */}
+            <div
+              className="absolute bottom-0 left-0 right-0 px-4 pb-4 pt-10"
+              style={{ background: `linear-gradient(to top, ${card.color}, transparent)` }}
+            >
+              <p className="font-heading font-bold text-sm text-text/80">{card.label}</p>
+              <p className="font-sans text-xs text-text-muted mt-0.5">RCTNE × Aagaz &apos;25</p>
+            </div>
+
+            {/* Front card glow ring */}
+            {isFront && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 rounded-2xl pointer-events-none"
+                style={{ boxShadow: `inset 0 0 0 1.5px ${card.border}50` }}
+              />
+            )}
+          </motion.div>
+        );
+      })}
+
+      {/* Dots indicator */}
+      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 flex gap-1.5">
+        {STACK_CARDS.map((_, i) => (
+          <motion.button
+            key={i}
+            onClick={() => setActiveIndex(i)}
+            animate={{
+              width: i === activeIndex ? 20 : 6,
+              backgroundColor: i === activeIndex ? "oklch(62% 0.17 40)" : "oklch(62% 0.17 40 / 0.3)",
+            }}
+            transition={{ duration: 0.3 }}
+            className="h-1.5 rounded-full cursor-pointer"
+            aria-label={`Show card ${i + 1}`}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -155,14 +192,22 @@ export function HomeHero() {
         {/* LEFT: Text content */}
         <div className="flex flex-col gap-5">
 
-          {/* Eyebrow */}
+          {/* Eyebrow — Aagaz theme */}
           <BlurFade delay={0.05} inView>
-            <div className={cn(
-              "inline-flex items-center rounded-full border border-accent/30 bg-accent/8 px-4 py-1.5 w-fit"
-            )}>
-              <AnimatedShinyText className="font-sans text-xs font-semibold uppercase tracking-[0.22em] text-accent">
-                ✦ Rotaract Club of Thane North End
-              </AnimatedShinyText>
+            <div className="flex flex-col gap-2">
+              <div className={cn(
+                "inline-flex items-center rounded-full border border-accent/30 bg-accent/8 px-4 py-1.5 w-fit"
+              )}>
+                <AnimatedShinyText className="font-sans text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+                  ✦ Rotaract Club of Thane North End
+                </AnimatedShinyText>
+              </div>
+              <div className="inline-flex items-center gap-2 w-fit">
+                <span className="w-1 h-1 rounded-full bg-accent/50" />
+                <span className="font-sans text-xs text-text-muted tracking-wide">
+                  Aagaz &apos;25 — Every Beginning Holds Endless Possibilities
+                </span>
+              </div>
             </div>
           </BlurFade>
 
@@ -222,7 +267,7 @@ export function HomeHero() {
 
         {/* RIGHT: Stacked image cards */}
         <BlurFade delay={0.35} inView>
-          <div className="hidden md:block w-[340px] h-[420px] relative">
+          <div className="hidden md:block w-[340px] h-[440px] relative">
             <StackedImages />
           </div>
         </BlurFade>

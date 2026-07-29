@@ -48,7 +48,7 @@ export function Navbar() {
             "pointer-events-auto flex items-center justify-between rounded-full px-5 py-2.5 w-full max-w-5xl transition-all duration-500 ease-out",
             scrolled
               ? "bg-background/90 backdrop-blur-2xl border border-border/70 shadow-[0_4px_30px_oklch(57%_0.16_45_/_0.07)]"
-              : "bg-background/30 backdrop-blur-sm border border-border/20"
+              : "bg-background/80 backdrop-blur-md border border-border/50 shadow-[0_2px_12px_oklch(22%_0.02_50_/_0.06)]"
           )}
         >
           {/* Brand */}
