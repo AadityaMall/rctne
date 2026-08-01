@@ -53,6 +53,7 @@ export interface Project {
   detail: string
   color: string
   status: "completed" | "upcoming"
+  instagramUrl?: string
 }
 
 // Testimonials

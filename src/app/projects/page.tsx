@@ -4,8 +4,9 @@ import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, X, Play } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { contentService } from "@/services/content.service";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
@@ -25,7 +26,7 @@ const STATUS_STYLES: Record<string, { bg: string; text: string; label: string }>
   This means the top 8% of the sticky container is always empty —
   where previous (stacked) cards show their header strip, creating
   the "deck of cards" visual.
-  
+
   transform-origin: top center — scaling anchors at the card's own top edge,
   so when cards scale down they stay pinned at their peek strip position.
 */
@@ -38,8 +39,15 @@ function FullProjectCard({
   index: number;
   flip: boolean;
 }) {
-  const [hovered, setHovered] = useState(false);
+  const [reelPlaying, setReelPlaying] = useState(false);
   const status = STATUS_STYLES[project.status ?? "completed"];
+  const hasImage = !!project.image;
+
+  const reelMatch = project.instagramUrl?.match(/\/(reel|p)\/([A-Za-z0-9_-]+)/);
+  const shortcode = reelMatch?.[2] ?? "";
+  const embedUrl = shortcode
+    ? `https://www.instagram.com/reel/${shortcode}/embed/?autoplay=1`
+    : null;
 
   return (
     <div
@@ -49,8 +57,6 @@ function FullProjectCard({
         borderRadius: "20px",
         boxShadow: "0 4px 40px oklch(0% 0 0 / 0.14), 0 1px 0 oklch(100% 0 0 / 0.08) inset",
       }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
     >
       <div className="absolute inset-0 bg-background" />
 
@@ -86,17 +92,17 @@ function FullProjectCard({
         </span>
       </div>
 
-      {/* Main content grid */}
+      {/* Main content grid — always 2 cols on desktop */}
       <div
         className={cn(
-          "relative z-10 h-full max-w-5xl mx-auto px-6 md:px-12 grid md:grid-cols-2 gap-6 md:gap-12 items-center pt-[7vh]",
+          "relative z-10 h-full max-w-5xl mx-auto px-6 md:px-12 grid gap-6 md:gap-12 items-center pt-[7vh] md:grid-cols-2",
           flip && "md:[direction:rtl]"
         )}
       >
         {/* Text side */}
         <div className={cn("flex flex-col gap-4 py-6", flip && "md:[direction:ltr]")}>  
           <div className="flex items-start gap-3">
-            <span className="font-heading font-bold text-[4rem] leading-[0.85] text-text/[0.05] select-none tabular-nums shrink-0">
+            <span className="font-heading font-bold text-[4rem] leading-[0.85] text-text/[0.5] select-none tabular-nums shrink-0">
               {String(index + 1).padStart(2, "0")}
             </span>
             <div className="flex flex-col gap-2 pt-1">
@@ -133,45 +139,136 @@ function FullProjectCard({
           </div>
         </div>
 
-        {/* Visual side */}
+        {/*
+          Visual side — always rendered.
+
+          BorderBeam fix:
+          ─ Outer wrapper: relative, rounded, NO overflow-hidden
+            → the beam's motion div travels the full perimeter unclipped.
+          ─ Inner div: overflow-hidden, rounded 10px (2px inset from outer 12px)
+            → keeps the photo / iframe perfectly inside the corners.
+        */}
         <div
-          className={cn(
-            "relative hidden md:flex items-center justify-center h-[46vh] rounded-xl overflow-hidden",
-            flip && "md:[direction:ltr]"
-          )}
-          style={{ backgroundColor: `${project.color}12`, border: `2px solid ${project.color}20` }}
-        >
-          <div className="absolute inset-0 dot-grid opacity-60" />
-
-          <span
-            className="font-heading font-bold leading-none select-none pointer-events-none"
-            style={{ fontSize: "clamp(7rem,18vw,14rem)", color: `${project.color}14` }}
+            className={cn("relative hidden md:block h-[46vh]", flip && "md:[direction:ltr]")}
+            style={{ borderRadius: "12px", border: `2px solid ${project.color}40` }}
           >
-            {String(index + 1).padStart(2, "0")}
-          </span>
-
-          <div
-            className="absolute top-0 left-0 right-0 h-1"
-            style={{ backgroundColor: project.color }}
-          />
-
-          <div
-            className="absolute bottom-0 left-0 right-0 p-5"
-            style={{ background: `linear-gradient(to top, ${project.color}28, transparent)` }}
-          >
-            <p
-              className="font-heading font-bold text-xs uppercase tracking-[0.18em]"
-              style={{ color: project.color }}
+            {/* Inner content box — overflow-hidden clips image/iframe to rounded corners */}
+            <div
+              className={cn(
+                "absolute inset-0 rounded-[10px] overflow-hidden",
+                !reelPlaying && embedUrl && "cursor-pointer group"
+              )}
+              style={{ backgroundColor: `${project.color}12` }}
+              onClick={() => !reelPlaying && embedUrl && setReelPlaying(true)}
             >
-              {project.category}
-            </p>
-            <p className="font-sans text-xs text-text-muted mt-1">{project.title}</p>
-          </div>
+              {/* Dot-grid texture */}
+              <div className="absolute inset-0 dot-grid opacity-40 z-0" />
 
-          {hovered && (
-            <BorderBeam size={400} duration={5} colorFrom={project.color} colorTo={`${project.color}00`} />
-          )}
-        </div>
+              {/* Number watermark — always sits behind */}
+              <span
+                className="absolute inset-0 flex items-center justify-center font-heading font-bold leading-none select-none pointer-events-none z-0"
+                style={{ fontSize: "clamp(7rem,18vw,14rem)", color: `${project.color}0a` }}
+              >
+                {String(index + 1).padStart(2, "0")}
+              </span>
+
+              {reelPlaying && embedUrl ? (
+                /* ── Inline reel: replaces thumbnail/fallback in the same frame ── */
+                <>
+                  <iframe
+                    src={embedUrl}
+                    className="absolute inset-0 w-full h-full border-0 z-20"
+                    allowFullScreen
+                    loading="eager"
+                    title={`${project.title} Instagram Reel`}
+                  />
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setReelPlaying(false); }}
+                    className="absolute top-3 right-3 z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-heading font-bold backdrop-blur-md transition-opacity hover:opacity-80"
+                    style={{ backgroundColor: "rgba(0,0,0,0.60)" }}
+                  >
+                    <X size={11} /> Close
+                  </button>
+                </>
+              ) : hasImage ? (
+                /* ── Thumbnail (projects that have a photo) ── */
+                <>
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover z-10 p-[4px] pt-0 rounded-[12px]"
+                    sizes="(max-width: 768px) 0vw, 50vw"
+                  />
+
+                  {/* Top color strip */}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-1 z-20"
+                    style={{ backgroundColor: project.color }}
+                  />
+
+                  {/* Bottom scrim */}
+                  <div
+                    className="absolute bottom-0 left-0 right-0 p-5 z-20"
+                    style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)" }}
+                  >
+                    <p className="font-heading font-bold text-xs uppercase tracking-[0.18em] text-white">
+                      {project.category}
+                    </p>
+                    <p className="font-sans text-xs text-white/70 mt-1">{project.title}</p>
+                  </div>
+
+                  {/* Play overlay — only for Instagram reels */}
+                  {embedUrl && (
+                    <div
+                      className="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/25"
+                      onClick={() => setReelPlaying(true)}
+                    >
+                      <div
+                        className="flex items-center gap-2 px-5 py-3 rounded-full font-heading font-bold text-sm text-white backdrop-blur-sm shadow-lg"
+                        style={{ backgroundColor: `${project.color}dd` }}
+                      >
+                        <Play size={16} fill="white" />
+                        Watch Reel
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                /* ── No-image fallback: big number + label (pure CSS, no <Image>) ── */
+                <>
+                  {/* Top color strip */}
+                  <div
+                    className="absolute top-0 left-0 right-0 h-1 z-10"
+                    style={{ backgroundColor: project.color }}
+                  />
+
+                  {/* Bottom label */}
+                  <div
+                    className="absolute bottom-0 left-0 right-0 p-5 z-10"
+                    style={{ background: `linear-gradient(to top, ${project.color}28, transparent)` }}
+                  >
+                    <p
+                      className="font-heading font-bold text-xs uppercase tracking-[0.18em]"
+                      style={{ color: project.color }}
+                    >
+                      {project.category}
+                    </p>
+                    <p className="font-sans text-xs text-text-muted mt-1">{project.title}</p>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {/* BorderBeam lives on the outer wrapper — not clipped by overflow-hidden */}
+            <BorderBeam
+              size={220}
+              duration={4}
+              colorFrom={project.color}
+              colorTo={`${project.color}00`}
+              borderWidth={2}
+            />
+          </div>
       </div>
     </div>
   );

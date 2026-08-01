@@ -108,6 +108,8 @@ export function ProjectsSection() {
                 rotate={rotations[i % rotations.length]}
                 size="md"
                 showHoverReveal
+                instagramUrl={project.instagramUrl}
+                image={project.image || undefined}
               />
             </div>
           ))}
