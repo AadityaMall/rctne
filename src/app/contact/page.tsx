@@ -133,7 +133,7 @@ export default async function ContactPage() {
 
               <div className="bg-surface border border-border/40 rounded-2xl p-6">
                 <p className="font-sans text-xs font-semibold uppercase tracking-widest text-text-muted mb-2">District</p>
-                <p className="font-heading font-bold text-base text-text">Rotaract District 3141</p>
+                <p className="font-heading font-bold text-base text-text">Rotaract District 3142</p>
                 <p className="font-sans text-sm text-text-muted mt-1">Thane, Maharashtra, India</p>
               </div>
             </div>
