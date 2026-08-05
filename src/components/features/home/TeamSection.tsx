@@ -1,117 +1,147 @@
 "use client";
 
-import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-import { MOCK_DATA } from "@/mockData";
-import { cn } from "@/lib/utils";
+import { useRef, useEffect, useState } from "react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+import { BlurFade } from "@/components/ui/blur-fade";
+import { contentService } from "@/services/content.service";
+import type { TeamMember } from "@/types/content.types";
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+// Warm gradient placeholders — vary per card
+const MEMBER_GRADIENTS = [
+  "linear-gradient(145deg, oklch(92% 0.025 65) 0%, oklch(86% 0.04 55) 100%)",
+  "linear-gradient(145deg, oklch(91% 0.025 80) 0%, oklch(85% 0.035 70) 100%)",
+  "linear-gradient(145deg, oklch(93% 0.02 50) 0%, oklch(87% 0.03 45) 100%)",
+  "linear-gradient(145deg, oklch(91% 0.03 60) 0%, oklch(85% 0.04 50) 100%)",
+];
 
-export function TeamSection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+// Subtle rotations for polaroid feel
+const ROTATIONS = [-1.5, 1, -0.5, 1.5];
 
-  useGSAP(() => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion || !sectionRef.current) return;
+interface MemberTeaserCardProps {
+  member: TeamMember;
+  index: number;
+  delay: number;
+}
 
-    // Set initial state for cards (hidden below and scaled down slightly)
-    cardsRef.current.forEach((card, i) => {
-      if (i !== 0) { // First card is already visible
-        gsap.set(card, { y: window.innerHeight, scale: 0.8, opacity: 0 });
-      }
-    });
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top top",
-        end: `+=${cardsRef.current.length * 100}%`, // Pin length based on number of cards
-        pin: true,
-        scrub: 1,
-      }
-    });
-
-    // Animate each card stacking on top
-    cardsRef.current.forEach((card, i) => {
-      if (i === 0) return; // Skip first
-
-      tl.to(card, {
-        y: 0,
-        scale: 1 - ((cardsRef.current.length - 1 - i) * 0.05), // Slight scale down for cards in back
-        opacity: 1,
-        ease: "power2.out",
-        duration: 1,
-      }, i * 0.5); // Stagger timing
-      
-      // Push previous cards slightly back
-      if (i > 0) {
-        const prevCards = cardsRef.current.slice(0, i);
-        tl.to(prevCards, {
-          scale: "-=0.05",
-          y: "-=20",
-          ease: "power2.out",
-          duration: 1
-        }, i * 0.5);
-      }
-    });
-
-  }, { scope: sectionRef });
+function MemberTeaserCard({ member, index, delay }: MemberTeaserCardProps) {
+  const rotation = ROTATIONS[index % ROTATIONS.length];
+  const gradient = MEMBER_GRADIENTS[index % MEMBER_GRADIENTS.length];
 
   return (
-    <section 
-      ref={sectionRef}
-      id="team" 
-      data-section="team" 
-      className="h-screen bg-transparent overflow-hidden flex items-center justify-center relative"
-    >
-      <div className="absolute top-24 md:top-32 left-6 md:left-24 z-20">
-        {/* Section Header */}
-        <div className="flex flex-col gap-2">
-          <span className="text-accent font-heading font-bold text-xl">
-            ({MOCK_DATA.team.number})
-          </span>
-          <h2 className="font-heading font-bold text-4xl md:text-6xl text-text tracking-tight">
-            {MOCK_DATA.team.title}
-          </h2>
-        </div>
-      </div>
-
-      {/* Stacking Card Deck */}
-      <div className="relative w-full max-w-sm md:max-w-md aspect-[3/4] mt-24">
-        {MOCK_DATA.team.items.map((member, i) => (
-          <div 
-            key={member.id}
-            ref={el => { cardsRef.current[i] = el; }}
-            className={cn(
-              "absolute inset-0 group flex flex-col gap-3 rounded-2xl shadow-2xl bg-surface border border-border/20 overflow-hidden",
-              i === 0 ? "z-10" : `z-[${10 + i}]`
-            )}
-            style={{ transformOrigin: "top center" }}
+    <BlurFade delay={delay} inView>
+      <motion.div
+        initial={{ rotate: rotation }}
+        whileHover={{ rotate: 0, y: -6, scale: 1.03 }}
+        transition={{ type: "spring", stiffness: 220, damping: 20 }}
+        className="flex flex-col gap-3 origin-bottom cursor-default"
+      >
+        {/* Photo frame */}
+        <div
+          className="relative w-full aspect-[3/4] rounded-xl overflow-hidden border-[3px]"
+          style={{ borderColor: "var(--accent-secondary)" }}
+        >
+          <div
+            className="absolute inset-0 flex items-end p-4"
+            style={{ background: gradient }}
           >
-            <div className="relative flex-1 w-full bg-surface-hover flex items-center justify-center">
-              <span className="font-sans text-text-muted">{member.image}</span>
-              
-              {/* Hover overlay */}
-              <div className="absolute inset-0 bg-background/80 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <div className="text-center p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                  <p className="font-heading font-bold text-2xl text-text mb-2">{member.name}</p>
-                  <p className="font-sans text-accent font-medium">{member.role}</p>
-                </div>
-              </div>
-            </div>
-            
-            {/* Base info strip */}
-            <div className="bg-background p-6 border-t border-border/10 flex justify-between items-center">
-              <h3 className="font-heading font-bold text-xl text-text">{member.name}</h3>
-              <span className="font-sans text-xs font-semibold text-accent uppercase tracking-wider bg-accent/10 px-3 py-1 rounded-full">
-                {member.role.split(" ")[0]}
-              </span>
-            </div>
+            {/* Faint initial watermark */}
+            <span
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-heading font-bold text-6xl select-none pointer-events-none"
+              style={{ color: "oklch(62% 0.17 40 / 0.12)" }}
+            >
+              {member.initials}
+            </span>
           </div>
-        ))}
+        </div>
+
+        {/* Caption */}
+        <div className="px-0.5">
+          <h3 className="font-heading font-bold text-base text-text leading-tight">
+            {member.name}
+          </h3>
+          <p className="font-sans text-xs font-semibold uppercase tracking-wide mt-0.5 text-accent">
+            {member.role}
+          </p>
+        </div>
+      </motion.div>
+    </BlurFade>
+  );
+}
+
+export function TeamSection() {
+  const [coreMembers, setCoreMembers] = useState<TeamMember[]>([]);
+
+  useEffect(() => {
+    contentService.getTeamTiers().then((tiers) => {
+      const core = tiers.find((t) => t.tier === "core");
+      if (core) setCoreMembers(core.members.slice(0, 4));
+    });
+  }, []);
+
+  return (
+    <section
+      id="team"
+      data-section="team"
+      className="py-24 md:py-32 px-6 bg-background"
+    >
+      <div className="max-w-5xl mx-auto w-full flex flex-col gap-12">
+
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-5">
+          <BlurFade delay={0.1} inView>
+            <div>
+              <span className="font-heading text-base text-accent font-bold tracking-wide">(03)</span>
+              <h2 className="font-heading font-bold text-4xl md:text-5xl text-text tracking-tight mt-1 leading-[1.05]">
+                Our Team
+              </h2>
+              <p className="font-sans text-sm text-text-muted mt-2 max-w-xs">
+                The driven individuals behind every RCTNE initiative.
+              </p>
+            </div>
+          </BlurFade>
+          <BlurFade delay={0.2} inView>
+            <Link
+              href="/team"
+              className="inline-flex items-center gap-2 font-heading font-semibold text-sm text-text-muted hover:text-accent transition-colors group border border-border/60 hover:border-accent/40 px-4 py-2 rounded-full"
+            >
+              Meet everyone
+              <motion.span
+                animate={{ x: [0, 4, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <ArrowRight size={14} />
+              </motion.span>
+            </Link>
+          </BlurFade>
+        </div>
+
+        {/* 4-card polaroid grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+          {coreMembers.map((member, i) => (
+            <MemberTeaserCard
+              key={member.id}
+              member={member}
+              index={i}
+              delay={0.15 + i * 0.1}
+            />
+          ))}
+        </div>
+
+        {/* CTA */}
+        <BlurFade delay={0.55} inView>
+          <div className="flex justify-center">
+            <Link
+              href="/team"
+              className="inline-flex items-center gap-2.5 font-heading font-bold text-sm bg-accent text-background px-8 py-3.5 rounded-full hover:bg-accent/90 transition-colors"
+            >
+              View full team
+              <ArrowRight size={14} />
+            </Link>
+          </div>
+        </BlurFade>
+
       </div>
     </section>
   );

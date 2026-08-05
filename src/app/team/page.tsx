@@ -13,14 +13,24 @@ import type { TeamTierGroup, TeamMember } from "@/types/content.types";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const rotations: (-2 | 0 | 2)[] = [-2, 2, -2, 2, -2, 2];
+// Per-member gradient palette (cycles for large groups)
+const PHOTO_GRADIENTS = [
+  "linear-gradient(145deg, oklch(92% 0.025 65) 0%, oklch(86% 0.04 55) 100%)",
+  "linear-gradient(145deg, oklch(91% 0.025 80) 0%, oklch(85% 0.035 70) 100%)",
+  "linear-gradient(145deg, oklch(93% 0.02 50) 0%, oklch(87% 0.03 45) 100%)",
+  "linear-gradient(145deg, oklch(91% 0.03 60) 0%, oklch(85% 0.04 50) 100%)",
+  "linear-gradient(145deg, oklch(92% 0.03 70) 0%, oklch(86% 0.045 60) 100%)",
+  "linear-gradient(145deg, oklch(90% 0.025 55) 0%, oklch(84% 0.035 50) 100%)",
+];
 
-const tierCardSize: Record<string, string> = {
-  district: "w-full aspect-[3/4]",
-  press: "w-full aspect-[4/5]",
-  core: "w-full aspect-[4/5]",
-  board: "w-full aspect-[4/5]",
-  general: "w-full aspect-square",
+const ROTATIONS = [-1.5, 0.8, -0.5, 1.2, -1, 0.5];
+
+const tierCardAspect: Record<string, string> = {
+  district: "aspect-[3/4]",
+  press: "aspect-[3/4]",
+  core: "aspect-[3/4]",
+  board: "aspect-[4/5]",
+  general: "aspect-square",
 };
 
 const tierGridCols: Record<string, string> = {
@@ -31,46 +41,44 @@ const tierGridCols: Record<string, string> = {
   general: "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6",
 };
 
-function MemberCard({ member, rotate, isCompact }: { member: TeamMember; rotate: -2 | 0 | 2; isCompact?: boolean }) {
+function MemberCard({
+  member,
+  index,
+  isCompact,
+}: {
+  member: TeamMember;
+  index: number;
+  isCompact?: boolean;
+}) {
+  const rotation = ROTATIONS[index % ROTATIONS.length];
+  const gradient = PHOTO_GRADIENTS[index % PHOTO_GRADIENTS.length];
+
   return (
     <motion.div
-      initial={{ rotate: isCompact ? 0 : rotate }}
-      whileHover={{ rotate: 0, scale: isCompact ? 1.04 : 1.02 }}
+      initial={{ rotate: isCompact ? 0 : rotation }}
+      whileHover={{ rotate: 0, y: isCompact ? -4 : -6, scale: isCompact ? 1.03 : 1.02 }}
       transition={{ type: "spring", stiffness: 220, damping: 22 }}
-      className="group flex flex-col gap-2 origin-bottom"
+      className="flex flex-col gap-2 origin-bottom cursor-default"
     >
-      {/* Frame */}
+      {/* Photo frame */}
       <div
-        className="relative overflow-hidden rounded-xl border-[3px]"
-        style={{
-          borderColor: "var(--accent-secondary)",
-          ...(tierCardSize[member.tier] ? {} : {}),
-        }}
+        className={`relative w-full overflow-hidden rounded-xl border-[3px] ${tierCardAspect[member.tier]}`}
+        style={{ borderColor: "var(--accent-secondary)" }}
       >
-        <div className={`relative ${isCompact ? "aspect-square" : tierCardSize[member.tier]}`}>
-          {/* Placeholder fill */}
-          <div
-            className="absolute inset-0 flex items-center justify-center"
+        <div
+          className="absolute inset-0 flex items-center justify-center"
+          style={{ background: gradient }}
+        >
+          {/* Faint initials watermark */}
+          <span
+            className="font-heading font-bold select-none pointer-events-none opacity-[0.12]"
             style={{
-              background: "linear-gradient(135deg, oklch(93% 0.02 70) 0%, oklch(88% 0.04 60) 100%)",
+              fontSize: isCompact ? "2.5rem" : "4rem",
+              color: "oklch(62% 0.17 40)",
             }}
           >
-            <span
-              className="font-heading font-bold text-text-muted/60"
-              style={{ fontSize: isCompact ? "1.25rem" : "2.5rem" }}
-            >
-              {member.initials}
-            </span>
-          </div>
-
-          {/* Hover overlay (not on compact general body) */}
-          {!isCompact && (
-            <div className="absolute inset-0 bg-background/70 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-250 flex flex-col items-center justify-center gap-2 p-4 text-center">
-              <p className="font-sans text-xs text-text-muted leading-relaxed">
-                Driving the club&apos;s initiatives with passion and commitment to community.
-              </p>
-            </div>
-          )}
+            {member.initials}
+          </span>
         </div>
       </div>
 
@@ -78,7 +86,7 @@ function MemberCard({ member, rotate, isCompact }: { member: TeamMember; rotate:
       <div className="px-0.5">
         <h3
           className="font-heading font-bold text-text leading-tight"
-          style={{ fontSize: isCompact ? "0.8rem" : "1rem" }}
+          style={{ fontSize: isCompact ? "0.75rem" : "1rem" }}
         >
           {member.name}
         </h3>
@@ -92,9 +100,10 @@ function MemberCard({ member, rotate, isCompact }: { member: TeamMember; rotate:
   );
 }
 
-function TierSection({ tier, index }: { tier: TeamTierGroup; index: number }) {
+function TierSection({ tier }: { tier: TeamTierGroup }) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const headerRef = useRef<HTMLDivElement>(null);
   const isCompact = tier.tier === "general";
 
   useGSAP(
@@ -110,7 +119,7 @@ function TierSection({ tier, index }: { tier: TeamTierGroup; index: number }) {
             opacity: 1,
             y: 0,
             scale: 1,
-            stagger: 0.08,
+            stagger: 0.07,
             duration: 0.65,
             ease: "power3.out",
           });
@@ -122,7 +131,6 @@ function TierSection({ tier, index }: { tier: TeamTierGroup; index: number }) {
     { scope: sectionRef }
   );
 
-  const headerRef = useRef<HTMLDivElement>(null);
   useGSAP(
     () => {
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -150,7 +158,7 @@ function TierSection({ tier, index }: { tier: TeamTierGroup; index: number }) {
       </div>
 
       <div
-        className={`grid gap-x-8 gap-y-10 ${tierGridCols[tier.tier]} ${
+        className={`grid gap-x-6 gap-y-10 ${tierGridCols[tier.tier]} ${
           tier.tier === "district" ? "mx-auto" : ""
         }`}
       >
@@ -161,7 +169,7 @@ function TierSection({ tier, index }: { tier: TeamTierGroup; index: number }) {
           >
             <MemberCard
               member={member}
-              rotate={rotations[i % rotations.length] as -2 | 0 | 2}
+              index={i}
               isCompact={isCompact}
             />
           </div>
@@ -231,8 +239,8 @@ export default function TeamPage() {
         </div>
 
         {/* Tier sections */}
-        {tiers.map((tier, i) => (
-          <TierSection key={tier.tier} tier={tier} index={i} />
+        {tiers.map((tier) => (
+          <TierSection key={tier.tier} tier={tier} />
         ))}
 
       </div>

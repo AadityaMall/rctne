@@ -8,7 +8,6 @@ export const projects: Project[] = [
     category: "Community Service",
     image: "/images/project-udaan.jpg",
     detail: "Empowering underprivileged youth through education and mentorship across 3 schools in Thane.",
-    color: "oklch(74% 0.13 40)",
     status: "completed",
   },
   {
@@ -18,7 +17,6 @@ export const projects: Project[] = [
     category: "Environment",
     image: "/images/project-green-canopy.jpg",
     detail: "Planted 500+ saplings across Thane — one tree at a time.",
-    color: "oklch(62% 0.14 150)",
     status: "completed",
   },
   {
@@ -28,7 +26,6 @@ export const projects: Project[] = [
     category: "Professional Dev",
     image: "/images/project-skillup.jpg",
     detail: "Career readiness workshops for 200+ college students.",
-    color: "oklch(66% 0.12 260)",
     status: "completed",
   },
   {
@@ -38,7 +35,6 @@ export const projects: Project[] = [
     category: "Medical Aid",
     image: "/images/project-health.jpg",
     detail: "Free medical checkups and consultations for senior citizens.",
-    color: "oklch(70% 0.13 30)",
     status: "completed",
   },
   {
@@ -48,7 +44,6 @@ export const projects: Project[] = [
     category: "Environment",
     image: "",
     detail: "Mobilising 100+ volunteers to restore Kelva Beach — partnering with local fishermen communities.",
-    color: "oklch(62% 0.14 150)",
     status: "upcoming",
   },
   {
@@ -58,7 +53,6 @@ export const projects: Project[] = [
     category: "Leadership",
     image: "",
     detail: "A one-day conference bringing together 250+ young leaders from across District 3141.",
-    color: "oklch(62% 0.17 40)",
     status: "upcoming",
   },
   {
@@ -68,7 +62,6 @@ export const projects: Project[] = [
     category: "Fundraiser",
     image: "",
     detail: "Our flagship annual fundraiser — an evening of culture, food, and community, raising funds for Project Udaan Season 2.",
-    color: "oklch(62% 0.14 280)",
     status: "upcoming",
   },
   {

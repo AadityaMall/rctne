@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { useLenis } from "lenis/react";
 import { ArrowLeft, X, Play } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -15,6 +16,17 @@ import { cn } from "@/lib/utils";
 import type { Project } from "@/types/content.types";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
+
+// Color palette — presentation concern, lives here not in data
+const PROJECT_PALETTE = [
+  "oklch(62% 0.17 40)",   // coral
+  "oklch(55% 0.14 148)",  // sage green
+  "oklch(57% 0.14 260)",  // periwinkle
+  "oklch(60% 0.15 20)",   // sienna
+  "oklch(62% 0.14 150)",  // forest
+  "oklch(62% 0.17 40)",   // coral (repeat)
+  "oklch(57% 0.14 280)",  // violet
+];
 
 const STATUS_STYLES: Record<string, { bg: string; text: string; label: string }> = {
   upcoming: { bg: "oklch(92% 0.025 250)", text: "oklch(57% 0.14 260)", label: "Upcoming" },
@@ -34,10 +46,12 @@ function FullProjectCard({
   project,
   index,
   flip,
+  color,
 }: {
   project: Project;
   index: number;
   flip: boolean;
+  color: string;
 }) {
   const [reelPlaying, setReelPlaying] = useState(false);
   const status = STATUS_STYLES[project.status ?? "completed"];
@@ -60,33 +74,33 @@ function FullProjectCard({
     >
       <div className="absolute inset-0 bg-background" />
 
-      {/* Colored top accent strip — visible in the peek zone when stacked */}
+      {/* Colored top accent strip */}
       <div
         className="absolute top-0 left-0 right-0 h-1.5 z-10"
-        style={{ backgroundColor: project.color }}
+        style={{ backgroundColor: color }}
       />
 
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: `radial-gradient(ellipse at ${flip ? "75% 50%" : "25% 50%"}, ${project.color}14, transparent 60%)`,
+          background: `radial-gradient(ellipse at ${flip ? "75% 50%" : "25% 50%"}, ${color}14, transparent 60%)`,
         }}
       />
 
-      {/* Peek strip label: visible when this card is in the stack behind another */}
+      {/* Peek strip label */}
       <div
         className="absolute top-0 left-0 right-0 h-[7vh] flex items-center px-6 md:px-10 gap-3 z-10"
-        style={{ background: `linear-gradient(to bottom, ${project.color}10, transparent)` }}
+        style={{ background: `linear-gradient(to bottom, ${color}10, transparent)` }}
       >
         <span
           className="font-heading font-bold text-xs uppercase tracking-[0.18em]"
-          style={{ color: project.color }}
+          style={{ color }}
         >
           {project.title}
         </span>
         <span
           className="inline-flex items-center gap-1 font-sans text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
-          style={{ backgroundColor: `${project.color}20`, color: project.color }}
+          style={{ backgroundColor: `${color}20`, color }}
         >
           {project.category}
         </span>
@@ -100,7 +114,7 @@ function FullProjectCard({
         )}
       >
         {/* Text side */}
-        <div className={cn("flex flex-col gap-4 py-6", flip && "md:[direction:ltr]")}>  
+        <div className={cn("flex flex-col gap-4 py-6", flip && "md:[direction:ltr]")}>
           <div className="flex items-start gap-3">
             <span className="font-heading font-bold text-[4rem] leading-[0.85] text-text/[0.5] select-none tabular-nums shrink-0">
               {String(index + 1).padStart(2, "0")}
@@ -108,9 +122,9 @@ function FullProjectCard({
             <div className="flex flex-col gap-2 pt-1">
               <span
                 className="inline-flex items-center gap-1.5 w-fit font-sans text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full"
-                style={{ backgroundColor: `${project.color}20`, color: project.color }}
+                style={{ backgroundColor: `${color}20`, color }}
               >
-                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: project.color }} />
+                <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
                 {project.category}
               </span>
               <span
@@ -149,126 +163,126 @@ function FullProjectCard({
             → keeps the photo / iframe perfectly inside the corners.
         */}
         <div
-            className={cn("relative hidden md:block h-[46vh]", flip && "md:[direction:ltr]")}
-            style={{ borderRadius: "12px", border: `2px solid ${project.color}40` }}
+          className={cn("relative hidden md:block h-[46vh]", flip && "md:[direction:ltr]")}
+          style={{ borderRadius: "12px", border: `2px solid ${color}40` }}
+        >
+          {/* Inner content box — overflow-hidden clips image/iframe to rounded corners */}
+          <div
+            className={cn(
+              "absolute inset-0 rounded-[10px] overflow-hidden",
+              !reelPlaying && embedUrl && "cursor-pointer group"
+            )}
+            style={{ backgroundColor: `${color}12` }}
+            onClick={() => !reelPlaying && embedUrl && setReelPlaying(true)}
           >
-            {/* Inner content box — overflow-hidden clips image/iframe to rounded corners */}
-            <div
-              className={cn(
-                "absolute inset-0 rounded-[10px] overflow-hidden",
-                !reelPlaying && embedUrl && "cursor-pointer group"
-              )}
-              style={{ backgroundColor: `${project.color}12` }}
-              onClick={() => !reelPlaying && embedUrl && setReelPlaying(true)}
+            {/* Dot-grid texture */}
+            <div className="absolute inset-0 dot-grid opacity-40 z-0" />
+
+            {/* Number watermark — always sits behind */}
+            <span
+              className="absolute inset-0 flex items-center justify-center font-heading font-bold leading-none select-none pointer-events-none z-0"
+              style={{ fontSize: "clamp(7rem,18vw,14rem)", color: `${color}0a` }}
             >
-              {/* Dot-grid texture */}
-              <div className="absolute inset-0 dot-grid opacity-40 z-0" />
+              {String(index + 1).padStart(2, "0")}
+            </span>
 
-              {/* Number watermark — always sits behind */}
-              <span
-                className="absolute inset-0 flex items-center justify-center font-heading font-bold leading-none select-none pointer-events-none z-0"
-                style={{ fontSize: "clamp(7rem,18vw,14rem)", color: `${project.color}0a` }}
-              >
-                {String(index + 1).padStart(2, "0")}
-              </span>
+            {reelPlaying && embedUrl ? (
+              /* ── Inline reel: replaces thumbnail/fallback in the same frame ── */
+              <>
+                <iframe
+                  src={embedUrl}
+                  className="absolute inset-0 w-full h-full border-0 z-20"
+                  allowFullScreen
+                  loading="eager"
+                  title={`${project.title} Instagram Reel`}
+                />
+                <button
+                  onClick={(e) => { e.stopPropagation(); setReelPlaying(false); }}
+                  className="absolute top-3 right-3 z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-heading font-bold backdrop-blur-md transition-opacity hover:opacity-80"
+                  style={{ backgroundColor: "rgba(0,0,0,0.60)" }}
+                >
+                  <X size={11} /> Close
+                </button>
+              </>
+            ) : hasImage ? (
+              /* ── Thumbnail (projects that have a photo) ── */
+              <>
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  fill
+                  className="object-cover z-10 p-[4px] pt-0 rounded-[12px]"
+                  sizes="(max-width: 768px) 0vw, 50vw"
+                />
 
-              {reelPlaying && embedUrl ? (
-                /* ── Inline reel: replaces thumbnail/fallback in the same frame ── */
-                <>
-                  <iframe
-                    src={embedUrl}
-                    className="absolute inset-0 w-full h-full border-0 z-20"
-                    allowFullScreen
-                    loading="eager"
-                    title={`${project.title} Instagram Reel`}
-                  />
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setReelPlaying(false); }}
-                    className="absolute top-3 right-3 z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white text-xs font-heading font-bold backdrop-blur-md transition-opacity hover:opacity-80"
-                    style={{ backgroundColor: "rgba(0,0,0,0.60)" }}
-                  >
-                    <X size={11} /> Close
-                  </button>
-                </>
-              ) : hasImage ? (
-                /* ── Thumbnail (projects that have a photo) ── */
-                <>
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    className="object-cover z-10 p-[4px] pt-0 rounded-[12px]"
-                    sizes="(max-width: 768px) 0vw, 50vw"
-                  />
+                {/* Top color strip */}
+                <div
+                  className="absolute top-0 left-0 right-0 h-1 z-20"
+                  style={{ backgroundColor: color }}
+                />
 
-                  {/* Top color strip */}
+                {/* Bottom scrim */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 p-5 z-20"
+                  style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)" }}
+                >
+                  <p className="font-heading font-bold text-xs uppercase tracking-[0.18em] text-white">
+                    {project.category}
+                  </p>
+                  <p className="font-sans text-xs text-white/70 mt-1">{project.title}</p>
+                </div>
+
+                {/* Play overlay — only for Instagram reels */}
+                {embedUrl && (
                   <div
-                    className="absolute top-0 left-0 right-0 h-1 z-20"
-                    style={{ backgroundColor: project.color }}
-                  />
-
-                  {/* Bottom scrim */}
-                  <div
-                    className="absolute bottom-0 left-0 right-0 p-5 z-20"
-                    style={{ background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)" }}
+                    className="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/25"
+                    onClick={() => setReelPlaying(true)}
                   >
-                    <p className="font-heading font-bold text-xs uppercase tracking-[0.18em] text-white">
-                      {project.category}
-                    </p>
-                    <p className="font-sans text-xs text-white/70 mt-1">{project.title}</p>
-                  </div>
-
-                  {/* Play overlay — only for Instagram reels */}
-                  {embedUrl && (
                     <div
-                      className="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/25"
-                      onClick={() => setReelPlaying(true)}
+                      className="flex items-center gap-2 px-5 py-3 rounded-full font-heading font-bold text-sm text-white backdrop-blur-sm shadow-lg"
+                      style={{ backgroundColor: `${color}dd` }}
                     >
-                      <div
-                        className="flex items-center gap-2 px-5 py-3 rounded-full font-heading font-bold text-sm text-white backdrop-blur-sm shadow-lg"
-                        style={{ backgroundColor: `${project.color}dd` }}
-                      >
-                        <Play size={16} fill="white" />
-                        Watch Reel
-                      </div>
+                      <Play size={16} fill="white" />
+                      Watch Reel
                     </div>
-                  )}
-                </>
-              ) : (
-                /* ── No-image fallback: big number + label (pure CSS, no <Image>) ── */
-                <>
-                  {/* Top color strip */}
-                  <div
-                    className="absolute top-0 left-0 right-0 h-1 z-10"
-                    style={{ backgroundColor: project.color }}
-                  />
-
-                  {/* Bottom label */}
-                  <div
-                    className="absolute bottom-0 left-0 right-0 p-5 z-10"
-                    style={{ background: `linear-gradient(to top, ${project.color}28, transparent)` }}
-                  >
-                    <p
-                      className="font-heading font-bold text-xs uppercase tracking-[0.18em]"
-                      style={{ color: project.color }}
-                    >
-                      {project.category}
-                    </p>
-                    <p className="font-sans text-xs text-text-muted mt-1">{project.title}</p>
                   </div>
-                </>
-              )}
-            </div>
+                )}
+              </>
+            ) : (
+              /* ── No-image fallback: big number + label (pure CSS, no <Image>) ── */
+              <>
+                {/* Top color strip */}
+                <div
+                  className="absolute top-0 left-0 right-0 h-1 z-10"
+                  style={{ backgroundColor: color }}
+                />
 
-            {/* BorderBeam lives on the outer wrapper — not clipped by overflow-hidden */}
-            <BorderBeam
-              size={220}
-              duration={4}
-              colorFrom={project.color}
-              colorTo={`${project.color}00`}
-              borderWidth={2}
-            />
+                {/* Bottom label */}
+                <div
+                  className="absolute bottom-0 left-0 right-0 p-5 z-10"
+                  style={{ background: `linear-gradient(to top, ${color}28, transparent)` }}
+                >
+                  <p
+                    className="font-heading font-bold text-xs uppercase tracking-[0.18em]"
+                    style={{ color: color }}
+                  >
+                    {project.category}
+                  </p>
+                  <p className="font-sans text-xs text-text-muted mt-1">{project.title}</p>
+                </div>
+              </>
+            )}
           </div>
+
+          {/* BorderBeam lives on the outer wrapper — not clipped by overflow-hidden */}
+          <BorderBeam
+            size={220}
+            duration={4}
+            colorFrom={color}
+            colorTo={`${color}00`}
+            borderWidth={2}
+          />
+        </div>
       </div>
     </div>
   );
@@ -292,6 +306,49 @@ export default function ProjectsPage() {
   const upcoming = projects.filter((p) => p.status === "upcoming").length;
   const completed = projects.filter((p) => p.status === "completed").length;
 
+  // Lenis scroll-snap: snap to nearest full card (100vh) on scroll stop
+  const snapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastSnapRef = useRef<number>(-1);
+
+  const snapToCard = useCallback(
+    (lenis: ReturnType<typeof useLenis>) => {
+      if (!lenis || !wrapperRef.current || !filtered.length) return;
+      const wrapperTop = wrapperRef.current.getBoundingClientRect().top + window.scrollY;
+      const scrollY = window.scrollY;
+      const relativeScroll = scrollY - wrapperTop;
+      const vh = window.innerHeight;
+      const cardIndex = Math.round(relativeScroll / vh);
+      const clampedIndex = Math.max(0, Math.min(cardIndex, filtered.length - 1));
+      const targetY = wrapperTop + clampedIndex * vh;
+
+      if (Math.abs(scrollY - targetY) > 8 && lastSnapRef.current !== clampedIndex) {
+        lastSnapRef.current = clampedIndex;
+        lenis.scrollTo(targetY, { duration: 0.7, easing: (t: number) => 1 - Math.pow(1 - t, 3) });
+      }
+    },
+    [filtered.length]
+  );
+
+  const lenis = useLenis(({ scroll: _ }) => {
+    // Debounce snap: fire 180ms after scroll stops
+    if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
+    snapTimeoutRef.current = setTimeout(() => {
+      // @ts-expect-error — lenis instance is available via useLenis callback
+      snapToCard(window.__lenis);
+    }, 180);
+  });
+
+  useEffect(() => {
+    if (lenis) {
+      // Store lenis ref globally for the timeout callback
+      // @ts-expect-error
+      window.__lenis = lenis;
+    }
+    return () => {
+      if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
+    };
+  }, [lenis]);
+
   useGSAP(
     () => {
       if (!filtered.length || !wrapperRef.current || !stickyRef.current) return;
@@ -304,7 +361,6 @@ export default function ProjectsPage() {
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const cards = gsap.utils.toArray<HTMLElement>(".project-full-card", stickyRef.current);
 
-      // Initial state: card 0 active, all others start below the fold
       cards.forEach((card, i) => {
         if (i === 0) {
           gsap.set(card, { yPercent: 0, y: 0, scale: 1, opacity: 1, zIndex: N });
@@ -322,28 +378,13 @@ export default function ProjectsPage() {
         scrub: 0.7,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
-          /*
-            fracActive: floating "which card is active/entering"
-              0.0 → card 0 fully active
-              0.5 → card 1 is 50% entered (halfway sliding up from below)
-              1.0 → card 1 fully active
-              1.7 → card 2 is 70% entered
-          */
           const fracActive = self.progress * (N - 1);
           setActiveCardIndex(Math.round(fracActive));
 
           cards.forEach((card, i) => {
-            /*
-              depth relative to fracActive:
-                depth < -1    → upcoming, hidden below fold
-                -1 < depth<0  → currently entering from below
-                depth = 0     → active
-                depth > 0     → in the stack (behind active)
-            */
             const depth = fracActive - i;
 
             if (depth <= -1) {
-              // Upcoming — fully hidden below viewport
               gsap.set(card, {
                 yPercent: 100,
                 y: 0,
@@ -352,12 +393,6 @@ export default function ProjectsPage() {
                 zIndex: Math.max(1, N - i),
               });
             } else if (depth < 0) {
-              /*
-                Entering card: slides up from yPercent:100 → 0.
-                enterP: 0 (just starting) → 1 (fully arrived).
-                This card gets the HIGHEST z-index so it slides OVER
-                the current active card, physically laying on top.
-              */
               const enterP = 1 + depth;
               gsap.set(card, {
                 yPercent: (1 - enterP) * 100,
@@ -367,19 +402,6 @@ export default function ProjectsPage() {
                 zIndex: N + 1,
               });
             } else {
-              /*
-                In the stack:
-                  d=0 → active card (on top, full size)
-                  d=1 → one below: slightly scaled, peek strip visible
-                  d=2 → two below: more scaled, narrower strip
-                  …
-
-                With transform-origin:top center, y:-d*PEEK moves the
-                card UP so its header strip peeks into the 8% zone above
-                the active card.
-                Scale shrinks the card downward (anchor at top) so the
-                bottom compresses, not the peek strip.
-              */
               const d = depth;
               const MAX = 6;
 
@@ -396,8 +418,8 @@ export default function ProjectsPage() {
 
               gsap.set(card, {
                 yPercent: 0,
-                y: -(d * 14),       // each stacked card peeks 14px above the one in front
-                scale: 1 - d * 0.06, // 6% smaller per depth level (from top anchor)
+                y: -(d * 14),
+                scale: 1 - d * 0.06,
                 opacity: Math.max(0, 1 - d * 0.18),
                 zIndex: Math.max(1, N - Math.floor(d)),
               });
@@ -498,18 +520,7 @@ export default function ProjectsPage() {
         </div>
       </BlurFade>
 
-      {/*
-        Stack architecture:
-        ┌─ stickyRef (sticky top-0, h-screen, overflow-hidden) ─────────┐
-        │  ░░░░░ 8% peek zone (shows stacked card header strips) ░░░░░  │
-        │  ┌── card top (8%) ────────────────────────────────────────┐  │
-        │  │   active card content                                   │  │
-        │  │                                                         │  │
-        │  └─────────────────────────────────────────────────────────┘  │
-        └────────────────────────────────────────────────────────────────┘
-        Each stacked card (d=1,2,3…) is shifted up by d×14px into the peek
-        zone and scaled down by d×6%, anchored at its top edge.
-      */}
+      {/* Scroll wrapper: each project card occupies 100vh */}
       <div
         ref={wrapperRef}
         style={{ height: `${Math.max(filtered.length, 1) * 100}vh` }}
@@ -524,18 +535,21 @@ export default function ProjectsPage() {
               project={project}
               index={i}
               flip={i % 2 === 1}
+              color={PROJECT_PALETTE[i % PROJECT_PALETTE.length]}
             />
           ))}
 
           {/* Progress dots */}
           <div className="absolute right-5 top-1/2 -translate-y-1/2 z-[200] flex flex-col gap-2 pointer-events-none">
-            {filtered.map((p, i) => (
+            {filtered.map((_, i) => (
               <div
                 key={i}
                 className="w-1.5 rounded-full transition-all duration-300"
                 style={{
                   height: i === activeCardIndex ? 28 : 6,
-                  backgroundColor: i === activeCardIndex ? p.color : "oklch(50% 0 0 / 0.15)",
+                  backgroundColor: i === activeCardIndex
+                    ? PROJECT_PALETTE[i % PROJECT_PALETTE.length]
+                    : "oklch(50% 0 0 / 0.15)",
                 }}
               />
             ))}

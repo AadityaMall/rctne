@@ -51,7 +51,6 @@ export interface Project {
   category: string
   image: string
   detail: string
-  color: string
   status: "completed" | "upcoming"
   instagramUrl?: string
 }

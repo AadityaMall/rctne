@@ -104,7 +104,6 @@ export function ProjectsSection() {
                 role={`${project.category} · ${project.year}`}
                 detail={project.detail}
                 category={project.category}
-                accentColor={project.color}
                 rotate={rotations[i % rotations.length]}
                 size="md"
                 showHoverReveal
