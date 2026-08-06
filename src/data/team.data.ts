@@ -1,83 +1,268 @@
 import type { TeamMember, TeamTierGroup } from "@/types/content.types"
 
-const districtMembers: TeamMember[] = [
-  { id: "d1", name: "Riya Kapoor", role: "District Representative", image: "", tier: "district", initials: "RK" },
-  { id: "d2", name: "Aarav Desai", role: "Track Representative", image: "", tier: "district", initials: "AD" },
-]
-
-const pressMembers: TeamMember[] = [
-  { id: "p1", name: "Sneha Patel", role: "PR Head", image: "", tier: "press", initials: "SP" },
-  { id: "p2", name: "Karan Mehta", role: "Media Lead", image: "", tier: "press", initials: "KM" },
-  { id: "p3", name: "Ananya Joshi", role: "Content Strategist", image: "", tier: "press", initials: "AJ" },
-]
-
+// ─── Core Team (Leadership) ─────────────────────────────────────
 const coreMembers: TeamMember[] = [
-  { id: "c1", name: "Alice Johnson", role: "President", image: "", tier: "core", initials: "AJ" },
-  { id: "c2", name: "Bob Williams", role: "Vice President", image: "", tier: "core", initials: "BW" },
-  { id: "c3", name: "Meera Nair", role: "Secretary", image: "", tier: "core", initials: "MN" },
-  { id: "c4", name: "Rohan Gupta", role: "Treasurer", image: "", tier: "core", initials: "RG" },
-  { id: "c5", name: "Priya Sharma", role: "Joint Secretary", image: "", tier: "core", initials: "PS" },
-  { id: "c6", name: "Vikram Singh", role: "Sergeant-at-Arms", image: "", tier: "core", initials: "VS" },
+  {
+    id: "core-1",
+    name: "Khushi Mahajan",
+    role: "President",
+    image: "/images/team/Core team/President_Khushi_Mahajan.PNG",
+    tier: "core",
+    initials: "KM",
+  },
+  {
+    id: "core-2",
+    name: "Aarya Deshmukh",
+    role: "Vice President",
+    image: "/images/team/Core team/Vice_President_Aarya_Deshmukh.PNG",
+    tier: "core",
+    initials: "AD",
+  },
+  {
+    id: "core-3",
+    name: "Shlok Nandedkar",
+    role: "Vice President",
+    image: "/images/team/Core team/Vice_President_Shlok_Nandedkar.PNG",
+    tier: "core",
+    initials: "SN",
+  },
+  {
+    id: "core-4",
+    name: "Anoushkka Nair",
+    role: "Club Secretary",
+    image: "/images/team/Core team/Club_Secretary_Anoushkka_Nair.PNG",
+    tier: "core",
+    initials: "AN",
+  },
+  {
+    id: "core-5",
+    name: "Srushti Patil",
+    role: "Joint Secretary",
+    image: "/images/team/Core team/Joint_Secretary_Srushti_Patil.PNG",
+    tier: "core",
+    initials: "SP",
+  },
+  {
+    id: "core-6",
+    name: "Shantanu Saraf",
+    role: "Finance Chair",
+    image: "/images/team/Core team/Finance_Chair_Shantanu_Saraf.PNG",
+    tier: "core",
+    initials: "SS",
+  },
+  {
+    id: "core-7",
+    name: "Shruti Bhavigadda",
+    role: "Sergeant at Arms",
+    image: "/images/team/Core team/Sergeant_At_Arms_Shruti_Bhavigadda.PNG",
+    tier: "core",
+    initials: "SB",
+  },
+  {
+    id: "core-8",
+    name: "Shreya Deshpande",
+    role: "TRS Chair",
+    image: "/images/team/Core team/TRS_Chair_Shreya_Deshpande.PNG",
+    tier: "core",
+    initials: "SD",
+  },
+  {
+    id: "core-9",
+    name: "Viraj Pongurlekar",
+    role: "Immediate Past President",
+    image: "/images/team/Core team/Immediate_Past_President_Viraj_Pongurlekar.PNG",
+    tier: "core",
+    initials: "VP",
+  },
+  {
+    id: "core-10",
+    name: "Apoorvaa Sivarraj",
+    role: "Club Mentor",
+    image: "/images/team/Core team/Club_Mentor_Apoorvaa_Sivarraj.PNG",
+    tier: "core",
+    initials: "AS",
+  },
 ]
 
+// ─── Board of Directors ─────────────────────────────────────────
 const boardMembers: TeamMember[] = [
-  { id: "b1", name: "Diana Prince", role: "Director of Community Service", image: "", tier: "board", initials: "DP" },
-  { id: "b2", name: "Ethan Kumar", role: "Director of Professional Dev.", image: "", tier: "board", initials: "EK" },
-  { id: "b3", name: "Fatima Khan", role: "Director of International Service", image: "", tier: "board", initials: "FK" },
-  { id: "b4", name: "Gaurav Thakur", role: "Director of Club Service", image: "", tier: "board", initials: "GT" },
-  { id: "b5", name: "Hema Iyer", role: "Director of Youth Service", image: "", tier: "board", initials: "HI" },
-  { id: "b6", name: "Ishaan Rao", role: "Director of Sports & Recreation", image: "", tier: "board", initials: "IR" },
-]
-
-const generalMembers: TeamMember[] = [
-  { id: "g1", name: "Aman Verma", role: "Member", image: "", tier: "general", initials: "AV" },
-  { id: "g2", name: "Bhavna Tiwari", role: "Member", image: "", tier: "general", initials: "BT" },
-  { id: "g3", name: "Chirag Jain", role: "Member", image: "", tier: "general", initials: "CJ" },
-  { id: "g4", name: "Devika Rao", role: "Member", image: "", tier: "general", initials: "DR" },
-  { id: "g5", name: "Eshan Malhotra", role: "Member", image: "", tier: "general", initials: "EM" },
-  { id: "g6", name: "Falak Shaikh", role: "Member", image: "", tier: "general", initials: "FS" },
-  { id: "g7", name: "Govind Pillai", role: "Member", image: "", tier: "general", initials: "GP" },
-  { id: "g8", name: "Harini Shetty", role: "Member", image: "", tier: "general", initials: "HS" },
-  { id: "g9", name: "Ishan Kulkarni", role: "Member", image: "", tier: "general", initials: "IK" },
-  { id: "g10", name: "Jasmine Wadia", role: "Member", image: "", tier: "general", initials: "JW" },
-  { id: "g11", name: "Kiran Bhat", role: "Member", image: "", tier: "general", initials: "KB" },
-  { id: "g12", name: "Lavanya Reddy", role: "Member", image: "", tier: "general", initials: "LR" },
+  // Career Development
+  {
+    id: "bod-1",
+    name: "Sankalp Nagar",
+    role: "Director — Career Development",
+    image: "/images/team/BOD Photos/Career Development/Sankalp_Nagar.jpg",
+    tier: "board",
+    initials: "SN",
+  },
+  // Club Service
+  {
+    id: "bod-2",
+    name: "Apurva Junnarkar",
+    role: "Director — Club Service",
+    image: "/images/team/BOD Photos/Club Serv/Apurva_Junnarkar.jpg",
+    tier: "board",
+    initials: "AJ",
+  },
+  {
+    id: "bod-3",
+    name: "Tisha Sharma",
+    role: "Director — Club Service",
+    image: "/images/team/BOD Photos/Club Serv/Tisha_Sharma.jpeg",
+    tier: "board",
+    initials: "TS",
+  },
+  // Community Service
+  {
+    id: "bod-4",
+    name: "Apeksha Mungi",
+    role: "Director — Community Service",
+    image: "/images/team/BOD Photos/Com. Serv/Apeksha_Mungi.jpg",
+    tier: "board",
+    initials: "AM",
+  },
+  {
+    id: "bod-5",
+    name: "Atharv Sawant",
+    role: "Director — Community Service",
+    image: "/images/team/BOD Photos/Com. Serv/Atharv_Sawant.PNG",
+    tier: "board",
+    initials: "AS",
+  },
+  {
+    id: "bod-6",
+    name: "Yukta More",
+    role: "Director — Community Service",
+    image: "/images/team/BOD Photos/Com. Serv/Yukta_More.jpg",
+    tier: "board",
+    initials: "YM",
+  },
+  // Digital Communications & Social Media
+  {
+    id: "bod-7",
+    name: "Kashish Chhadva",
+    role: "Director — Digital Communications",
+    image: "/images/team/BOD Photos/Digi com & social media/Kashish_Chhadva.jpg",
+    tier: "board",
+    initials: "KC",
+  },
+  {
+    id: "bod-8",
+    name: "Neeraj Patil",
+    role: "Director — Digital Communications",
+    image: "/images/team/BOD Photos/Digi com & social media/Neeraj_Patil.jpeg",
+    tier: "board",
+    initials: "NP",
+  },
+  {
+    id: "bod-9",
+    name: "Nupur Shah",
+    role: "Director — Digital Communications",
+    image: "/images/team/BOD Photos/Digi com & social media/Nupur_Shah.jpeg",
+    tier: "board",
+    initials: "NS",
+  },
+  // Editorial
+  {
+    id: "bod-10",
+    name: "Gargie Kode",
+    role: "Director — Editorial",
+    image: "/images/team/BOD Photos/Editorial/Gargie_Kode.jpeg",
+    tier: "board",
+    initials: "GK",
+  },
+  {
+    id: "bod-11",
+    name: "Vibhav Kode",
+    role: "Director — Editorial",
+    image: "/images/team/BOD Photos/Editorial/Vibhav_Kode.jpeg",
+    tier: "board",
+    initials: "VK",
+  },
+  // International Services
+  {
+    id: "bod-12",
+    name: "Saanvi Jain",
+    role: "Director — International Services",
+    image: "/images/team/BOD Photos/International services/Saanvi_Jain.jpg",
+    tier: "board",
+    initials: "SJ",
+  },
+  {
+    id: "bod-13",
+    name: "Sana Malhotra",
+    role: "Director — International Services",
+    image: "/images/team/BOD Photos/International services/Sana_Malhotra.PNG",
+    tier: "board",
+    initials: "SM",
+  },
+  // PIS
+  {
+    id: "bod-14",
+    name: "Sujal Jadhav",
+    role: "Director — PIS",
+    image: "/images/team/BOD Photos/PIS/Sujal_Jadhav.PNG",
+    tier: "board",
+    initials: "SJ",
+  },
+  {
+    id: "bod-15",
+    name: "Sujal Mahajan",
+    role: "Director — PIS",
+    image: "/images/team/BOD Photos/PIS/Sujal_Mahajan.jpg",
+    tier: "board",
+    initials: "SM",
+  },
+  // PR & Marketing
+  {
+    id: "bod-16",
+    name: "Tanay Shinde",
+    role: "Director — PR & Marketing",
+    image: "/images/team/BOD Photos/Pr & Marketing/Tanay_Shinde.JPG",
+    tier: "board",
+    initials: "TS",
+  },
+  // Sports
+  {
+    id: "bod-17",
+    name: "Nikita Menghani",
+    role: "Director — Sports",
+    image: "/images/team/BOD Photos/Sports/Nikita_Menghani.jpg",
+    tier: "board",
+    initials: "NM",
+  },
+  {
+    id: "bod-18",
+    name: "Om Kanojiya",
+    role: "Director — Sports",
+    image: "/images/team/BOD Photos/Sports/Om_Kanojiya.webp",
+    tier: "board",
+    initials: "OK",
+  },
+  // TRS — HEIC file cannot be served directly; using initials fallback
+  {
+    id: "bod-19",
+    name: "Prutha Desai",
+    role: "Director — TRS",
+    image: "/images/team/BOD Photos/TRS/Prutha_Desai.jpg",
+    tier: "board",
+    initials: "PD",
+  },
 ]
 
 export const teamTiers: TeamTierGroup[] = [
   {
     number: "01",
-    tier: "district",
-    title: "District Representatives",
-    subtitle: "Connecting RCTNE to the wider Rotaract world.",
-    members: districtMembers,
-  },
-  {
-    number: "02",
-    tier: "press",
-    title: "Press & PR",
-    subtitle: "Telling our story to the world.",
-    members: pressMembers,
-  },
-  {
-    number: "03",
     tier: "core",
     title: "Core Team",
-    subtitle: "The engine room of every initiative.",
+    subtitle: "The leadership driving every initiative at RCTNE.",
     members: coreMembers,
   },
   {
-    number: "04",
+    number: "02",
     tier: "board",
     title: "Board of Directors",
     subtitle: "Driving strategy and direction across all service avenues.",
     members: boardMembers,
-  },
-  {
-    number: "05",
-    tier: "general",
-    title: "General Body",
-    subtitle: "The heart of RCTNE — every member counts.",
-    members: generalMembers,
   },
 ]

@@ -7,38 +7,39 @@ import { useGSAP } from "@gsap/react";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { contentService } from "@/services/content.service";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import type { TeamTierGroup, TeamMember } from "@/types/content.types";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-// Per-member gradient palette (cycles for large groups)
-const PHOTO_GRADIENTS = [
-  "linear-gradient(145deg, oklch(92% 0.025 65) 0%, oklch(86% 0.04 55) 100%)",
-  "linear-gradient(145deg, oklch(91% 0.025 80) 0%, oklch(85% 0.035 70) 100%)",
-  "linear-gradient(145deg, oklch(93% 0.02 50) 0%, oklch(87% 0.03 45) 100%)",
-  "linear-gradient(145deg, oklch(91% 0.03 60) 0%, oklch(85% 0.04 50) 100%)",
-  "linear-gradient(145deg, oklch(92% 0.03 70) 0%, oklch(86% 0.045 60) 100%)",
-  "linear-gradient(145deg, oklch(90% 0.025 55) 0%, oklch(84% 0.035 50) 100%)",
-];
-
 const ROTATIONS = [-1.5, 0.8, -0.5, 1.2, -1, 0.5];
+
+// Warm accent-tinted fallback backgrounds (initials-only cards)
+const FALLBACK_GRADIENTS = [
+  "linear-gradient(145deg, oklch(22% 0.04 55) 0%, oklch(16% 0.03 50) 100%)",
+  "linear-gradient(145deg, oklch(22% 0.04 70) 0%, oklch(16% 0.03 60) 100%)",
+  "linear-gradient(145deg, oklch(21% 0.035 45) 0%, oklch(15% 0.025 40) 100%)",
+  "linear-gradient(145deg, oklch(23% 0.04 65) 0%, oklch(17% 0.03 55) 100%)",
+  "linear-gradient(145deg, oklch(21% 0.038 60) 0%, oklch(15% 0.028 50) 100%)",
+  "linear-gradient(145deg, oklch(22% 0.042 75) 0%, oklch(16% 0.032 65) 100%)",
+];
 
 const tierCardAspect: Record<string, string> = {
   district: "aspect-[3/4]",
-  press: "aspect-[3/4]",
-  core: "aspect-[3/4]",
-  board: "aspect-[4/5]",
-  general: "aspect-square",
+  press:    "aspect-[3/4]",
+  core:     "aspect-[3/4]",
+  board:    "aspect-[4/5]",
+  general:  "aspect-square",
 };
 
 const tierGridCols: Record<string, string> = {
   district: "grid-cols-1 sm:grid-cols-2 max-w-2xl",
-  press: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
-  core: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
-  board: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
-  general: "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6",
+  press:    "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
+  core:     "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5",
+  board:    "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5",
+  general:  "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6",
 };
 
 function MemberCard({
@@ -51,7 +52,8 @@ function MemberCard({
   isCompact?: boolean;
 }) {
   const rotation = ROTATIONS[index % ROTATIONS.length];
-  const gradient = PHOTO_GRADIENTS[index % PHOTO_GRADIENTS.length];
+  const fallbackGradient = FALLBACK_GRADIENTS[index % FALLBACK_GRADIENTS.length];
+  const hasImage = !!member.image;
 
   return (
     <motion.div
@@ -62,36 +64,53 @@ function MemberCard({
     >
       {/* Photo frame */}
       <div
-        className={`relative w-full overflow-hidden rounded-xl border-[3px] ${tierCardAspect[member.tier]}`}
-        style={{ borderColor: "var(--accent-secondary)" }}
+        className={`relative w-full overflow-hidden rounded-xl border-[2.5px] ${tierCardAspect[member.tier]}`}
+        style={{ borderColor: "oklch(60% 0.14 48 / 0.55)" }}
       >
-        <div
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ background: gradient }}
-        >
-          {/* Faint initials watermark */}
-          <span
-            className="font-heading font-bold select-none pointer-events-none opacity-[0.12]"
-            style={{
-              fontSize: isCompact ? "2.5rem" : "4rem",
-              color: "oklch(62% 0.17 40)",
-            }}
+        {hasImage ? (
+          <Image
+            src={member.image}
+            alt={member.name}
+            fill
+            className="object-cover object-top"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+          />
+        ) : (
+          /* Fallback: accent-tinted dark card with large initials */
+          <div
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ background: fallbackGradient }}
           >
-            {member.initials}
-          </span>
-        </div>
+            <span
+              className="font-heading font-bold select-none pointer-events-none"
+              style={{
+                fontSize: isCompact ? "2rem" : "3.5rem",
+                color: "oklch(70% 0.14 48)",
+                opacity: 0.55,
+              }}
+            >
+              {member.initials}
+            </span>
+          </div>
+        )}
+
+        {/* Subtle bottom vignette so name caption reads well */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none"
+          style={{ background: "linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 100%)" }}
+        />
       </div>
 
       {/* Caption */}
       <div className="px-0.5">
         <h3
           className="font-heading font-bold text-text leading-tight"
-          style={{ fontSize: isCompact ? "0.75rem" : "1rem" }}
+          style={{ fontSize: isCompact ? "0.72rem" : "0.92rem" }}
         >
           {member.name}
         </h3>
         {!isCompact && (
-          <p className="font-sans text-xs font-semibold uppercase tracking-wide mt-0.5 text-accent">
+          <p className="font-sans text-[0.68rem] font-semibold uppercase tracking-wide mt-0.5 text-accent leading-snug">
             {member.role}
           </p>
         )}
@@ -119,13 +138,13 @@ function TierSection({ tier }: { tier: TeamTierGroup }) {
             opacity: 1,
             y: 0,
             scale: 1,
-            stagger: 0.07,
-            duration: 0.65,
+            stagger: 0.06,
+            duration: 0.6,
             ease: "power3.out",
           });
         },
         once: true,
-        start: "top 87%",
+        start: "top 88%",
       });
     },
     { scope: sectionRef }
@@ -158,7 +177,7 @@ function TierSection({ tier }: { tier: TeamTierGroup }) {
       </div>
 
       <div
-        className={`grid gap-x-6 gap-y-10 ${tierGridCols[tier.tier]} ${
+        className={`grid gap-x-5 gap-y-8 ${tierGridCols[tier.tier]} ${
           tier.tier === "district" ? "mx-auto" : ""
         }`}
       >
@@ -208,7 +227,7 @@ export default function TeamPage() {
 
   return (
     <main className="min-h-screen pt-28 pb-32 px-6 relative z-10 w-full">
-      <div className="max-w-5xl mx-auto w-full flex flex-col gap-28 md:gap-36">
+      <div className="max-w-6xl mx-auto w-full flex flex-col gap-28 md:gap-36">
 
         {/* Header */}
         <div ref={heroRef} className="flex flex-col gap-8">
@@ -233,7 +252,7 @@ export default function TeamPage() {
             </h1>
 
             <p className="font-sans text-lg text-text-muted max-w-lg leading-relaxed">
-              A cross-section of the driven individuals who make RCTNE what it is — from district leadership to our vibrant general body.
+              Meet the driven individuals who make RCTNE what it is — from core leadership to every director steering our service avenues.
             </p>
           </div>
         </div>
