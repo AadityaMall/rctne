@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { motion } from "framer-motion";
 import { ExternalLink, ArrowRight } from "lucide-react";
 import { contentService } from "@/services/content.service";
 import type { SocialLink } from "@/types/content.types";
@@ -31,14 +33,20 @@ export function Footer() {
           {/* Links */}
           <div className="flex flex-col md:flex-row gap-10">
             <div className="flex flex-col gap-3">
-              <div className="font-heading font-semibold text-sm text-text uppercase tracking-wider">Navigate</div>
-              {["/#about", "/#projects", "/#calendar", "/#contact"].map((href) => (
+            <div className="font-heading font-semibold text-sm text-text uppercase tracking-wider">Navigate</div>
+              {(
+                [
+                  { href: "/about",    label: "About"    },
+                  { href: "/projects", label: "Projects" },
+                  { href: "/contact",  label: "Contact"  },
+                ] as const
+              ).map(({ href, label }) => (
                 <Link
                   key={href}
                   href={href}
                   className="font-sans text-sm text-text-muted hover:text-accent transition-colors"
                 >
-                  {href.replace("/#", "").replace("-", " ").replace(/^\w/, (c) => c.toUpperCase())}
+                  {label}
                 </Link>
               ))}
             </div>
@@ -59,16 +67,39 @@ export function Footer() {
           <div className="flex flex-col gap-3">
             <div className="font-heading font-semibold text-sm text-text uppercase tracking-wider">Connect</div>
             <div className="flex gap-3">
-              {socials.map((social) => (
-                <a
-                  key={social.platform}
-                  href={social.url}
-                  aria-label={social.platform}
-                  className="inline-flex items-center gap-1.5 p-2.5 rounded-full border border-border/60 text-text-muted hover:text-accent hover:border-accent/40 transition-colors"
-                >
-                  <ExternalLink size={14} />
-                </a>
-              ))}
+              {socials.map((social) =>
+                social.platform === "Instagram" ? (
+                  <motion.a
+                    key={social.platform}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Instagram"
+                    whileHover={{ scale: 1.12 }}
+                    transition={{ type: "tween", duration: 0.18, ease: "easeOut" }}
+                    style={{ transformOrigin: "center" }}
+                    className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-border/60 hover:border-pink-500/50 bg-transparent hover:bg-gradient-to-tr hover:from-yellow-400/20 hover:via-pink-500/20 hover:to-purple-600/20 transition-colors"
+                  >
+                    <Image
+                      src="/svgs/instagram.svg"
+                      alt="Instagram"
+                      width={16}
+                      height={16}
+                    />
+                  </motion.a>
+                ) : (
+                  <a
+                    key={social.platform}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.platform}
+                    className="inline-flex items-center justify-center p-2.5 rounded-full border border-border/60 text-text-muted hover:text-accent hover:border-accent/40 transition-colors"
+                  >
+                    <ExternalLink size={14} />
+                  </a>
+                )
+              )}
             </div>
           </div>
         </div>

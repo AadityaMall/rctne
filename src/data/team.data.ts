@@ -137,15 +137,7 @@ const boardMembers: TeamMember[] = [
     tier: "board",
     initials: "YM",
   },
-  // Digital Communications & Social Media
-  {
-    id: "bod-7",
-    name: "Kashish Chhadva",
-    role: "Director — Social Media",
-    image: "/images/team/BOD_Photos/Social_Media_Kashish_Chhadva.jpg",
-    tier: "board",
-    initials: "KC",
-  },
+  // Digital Communications
   {
     id: "bod-8",
     name: "Neeraj Patil",
@@ -221,6 +213,15 @@ const boardMembers: TeamMember[] = [
     image: "/images/team/BOD_Photos/PR_Marketing_Tanay_Shinde.JPG",
     tier: "board",
     initials: "TS",
+  },
+  // Social Media
+  {
+    id: "bod-7",
+    name: "Kashish Chhadva",
+    role: "Director — Social Media",
+    image: "/images/team/BOD_Photos/Social_Media_Kashish_Chhadva.jpg",
+    tier: "board",
+    initials: "KC",
   },
   // Sports
   {

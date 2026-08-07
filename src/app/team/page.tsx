@@ -16,14 +16,14 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const ROTATIONS = [-1.5, 0.8, -0.5, 1.2, -1, 0.5];
 
-// Warm accent-tinted fallback backgrounds (initials-only cards)
+// Fallback backgrounds — use semantic CSS vars so they adapt to light/dark mode
 const FALLBACK_GRADIENTS = [
-  "linear-gradient(145deg, oklch(22% 0.04 55) 0%, oklch(16% 0.03 50) 100%)",
-  "linear-gradient(145deg, oklch(22% 0.04 70) 0%, oklch(16% 0.03 60) 100%)",
-  "linear-gradient(145deg, oklch(21% 0.035 45) 0%, oklch(15% 0.025 40) 100%)",
-  "linear-gradient(145deg, oklch(23% 0.04 65) 0%, oklch(17% 0.03 55) 100%)",
-  "linear-gradient(145deg, oklch(21% 0.038 60) 0%, oklch(15% 0.028 50) 100%)",
-  "linear-gradient(145deg, oklch(22% 0.042 75) 0%, oklch(16% 0.032 65) 100%)",
+  "linear-gradient(145deg, var(--surface) 0%, var(--surface-hover) 100%)",
+  "linear-gradient(145deg, var(--surface-hover) 0%, var(--surface) 100%)",
+  "linear-gradient(145deg, var(--surface) 0%, var(--surface-hover) 100%)",
+  "linear-gradient(145deg, var(--surface-hover) 0%, var(--surface) 100%)",
+  "linear-gradient(145deg, var(--surface) 0%, var(--surface-hover) 100%)",
+  "linear-gradient(145deg, var(--surface-hover) 0%, var(--surface) 100%)",
 ];
 
 const tierCardAspect: Record<string, string> = {
@@ -85,8 +85,8 @@ function MemberCard({
               className="font-heading font-bold select-none pointer-events-none"
               style={{
                 fontSize: isCompact ? "2rem" : "3.5rem",
-                color: "oklch(70% 0.14 48)",
-                opacity: 0.55,
+                color: "var(--accent)",
+                opacity: 0.4,
               }}
             >
               {member.initials}
