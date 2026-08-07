@@ -110,7 +110,7 @@ export interface TeamMember {
   id: string
   name: string
   role: string
-  image: string
+  image?: string
   tier: TeamTier
   initials: string
 }
