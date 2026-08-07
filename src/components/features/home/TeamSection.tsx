@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { BlurFade } from "@/components/ui/blur-fade";
@@ -42,18 +43,25 @@ function MemberTeaserCard({ member, index, delay }: MemberTeaserCardProps) {
           className="relative w-full aspect-[3/4] rounded-xl overflow-hidden border-[3px]"
           style={{ borderColor: "var(--accent-secondary)" }}
         >
-          <div
-            className="absolute inset-0 flex items-end p-4"
-            style={{ background: gradient }}
-          >
-            {/* Faint initial watermark */}
+          {/* Gradient base — always present */}
+          <div className="absolute inset-0" style={{ background: gradient }} />
+
+          {member.image ? (
+            <Image
+              src={member.image}
+              alt={member.name}
+              fill
+              className="object-cover object-top"
+            />
+          ) : (
+            /* Initials watermark fallback */
             <span
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-heading font-bold text-6xl select-none pointer-events-none"
               style={{ color: "oklch(62% 0.17 40 / 0.12)" }}
             >
               {member.initials}
             </span>
-          </div>
+          )}
         </div>
 
         {/* Caption */}
