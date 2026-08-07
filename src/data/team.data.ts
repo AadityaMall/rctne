@@ -6,7 +6,7 @@ const coreMembers: TeamMember[] = [
     id: "core-1",
     name: "Khushi Mahajan",
     role: "President",
-    image: "/images/team/Core team/President_Khushi_Mahajan.PNG",
+    image: "/images/team/Core team/President_Khushi_Mahajan.jpg",
     tier: "core",
     initials: "KM",
   },
