@@ -100,7 +100,7 @@ function ProjectImageCard({ project, index, delay }: ProjectImageCardProps) {
                 {project.title}
               </h3>
               <span className="font-sans text-xs text-text-muted tabular-nums shrink-0">
-                {project.year}
+                {project.month}
               </span>
             </div>
             <p className="font-sans text-sm text-text-muted leading-relaxed line-clamp-2">
@@ -118,7 +118,7 @@ export function WorkGlimpse() {
 
   useEffect(() => {
     contentService.getProjects().then((p) =>
-      setProjects(p.filter((x) => x.status === "completed").slice(0, 3))
+      setProjects(p.slice(0, 3))
     );
   }, []);
 
@@ -139,7 +139,7 @@ export function WorkGlimpse() {
                 Selected Work
               </h2>
               <p className="font-sans text-sm text-text-muted mt-2">
-                A look at what Aagaz &apos;25 has set in motion.
+                A look at what Aagaz &apos;26–27 has set in motion.
               </p>
             </div>
           </BlurFade>

@@ -17,29 +17,19 @@ import type { Project } from "@/types/content.types";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-// Color palette — presentation concern, lives here not in data
+// Color palette — presentation concern only, never in data
 const PROJECT_PALETTE = [
   "oklch(62% 0.17 40)",   // coral
   "oklch(55% 0.14 148)",  // sage green
   "oklch(57% 0.14 260)",  // periwinkle
   "oklch(60% 0.15 20)",   // sienna
   "oklch(62% 0.14 150)",  // forest
-  "oklch(62% 0.17 40)",   // coral (repeat)
   "oklch(57% 0.14 280)",  // violet
 ];
 
-const STATUS_STYLES: Record<string, { bg: string; text: string; label: string }> = {
-  upcoming: { bg: "oklch(92% 0.025 250)", text: "oklch(57% 0.14 260)", label: "Upcoming" },
-  completed: { bg: "oklch(94% 0.01 70)", text: "oklch(48% 0.02 50)", label: "Completed" },
-};
-
 /*
-  Each card is positioned with an 8% top margin (the "peek zone").
-  This means the top 8% of the sticky container is always empty —
-  where previous (stacked) cards show their header strip, creating
-  the "deck of cards" visual.
-
-  transform-origin: top center — scaling anchors at the card's own top edge,
+  Each card is positioned with top: 10%.
+  Transform-origin: top center — scaling anchors at the card's own top edge
   so when cards scale down they stay pinned at their peek strip position.
 */
 function FullProjectCard({
@@ -54,7 +44,6 @@ function FullProjectCard({
   color: string;
 }) {
   const [reelPlaying, setReelPlaying] = useState(false);
-  const status = STATUS_STYLES[project.status ?? "completed"];
   const hasImage = !!project.image;
 
   const reelMatch = project.instagramUrl?.match(/\/(reel|p)\/([A-Za-z0-9_-]+)/);
@@ -87,7 +76,7 @@ function FullProjectCard({
         }}
       />
 
-      {/* Peek strip label */}
+      {/* Peek strip label — visible when card is stacked behind */}
       <div
         className="absolute top-0 left-0 right-0 h-[7vh] flex items-center px-6 md:px-10 gap-3 z-10"
         style={{ background: `linear-gradient(to bottom, ${color}10, transparent)` }}
@@ -106,7 +95,7 @@ function FullProjectCard({
         </span>
       </div>
 
-      {/* Main content grid — always 2 cols on desktop */}
+      {/* Main content grid */}
       <div
         className={cn(
           "relative z-10 h-full max-w-5xl mx-auto px-6 md:px-12 grid gap-6 md:gap-12 items-center pt-[7vh] md:grid-cols-2",
@@ -127,12 +116,6 @@ function FullProjectCard({
                 <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
                 {project.category}
               </span>
-              <span
-                className="inline-flex items-center font-sans text-[10px] font-semibold px-2.5 py-1 rounded-full w-fit"
-                style={{ backgroundColor: status.bg, color: status.text }}
-              >
-                {status.label}
-              </span>
             </div>
           </div>
 
@@ -144,17 +127,23 @@ function FullProjectCard({
             {project.detail}
           </p>
 
+          {/* Month + season tag — replaces the old year + status row */}
           <div className="flex items-center gap-3 pt-2">
-            <span className="font-heading font-bold text-sm text-text-muted tabular-nums">{project.year}</span>
+            <span
+              className="font-heading font-bold text-sm tabular-nums px-2.5 py-1 rounded-full"
+              style={{ backgroundColor: `${color}18`, color }}
+            >
+              {project.month}
+            </span>
             <span className="w-1 h-1 rounded-full bg-border/60" />
             <span className="font-sans text-xs text-text-muted/50 tracking-wide">
-              RCTNE × Aagaz &apos;25
+              RCTNE × Aagaz &apos;26–27
             </span>
           </div>
         </div>
 
         {/*
-          Visual side — always rendered.
+          Visual side.
 
           BorderBeam fix:
           ─ Outer wrapper: relative, rounded, NO overflow-hidden
@@ -178,7 +167,7 @@ function FullProjectCard({
             {/* Dot-grid texture */}
             <div className="absolute inset-0 dot-grid opacity-40 z-0" />
 
-            {/* Number watermark — always sits behind */}
+            {/* Number watermark */}
             <span
               className="absolute inset-0 flex items-center justify-center font-heading font-bold leading-none select-none pointer-events-none z-0"
               style={{ fontSize: "clamp(7rem,18vw,14rem)", color: `${color}0a` }}
@@ -187,7 +176,6 @@ function FullProjectCard({
             </span>
 
             {reelPlaying && embedUrl ? (
-              /* ── Inline reel: replaces thumbnail/fallback in the same frame ── */
               <>
                 <iframe
                   src={embedUrl}
@@ -205,7 +193,6 @@ function FullProjectCard({
                 </button>
               </>
             ) : hasImage ? (
-              /* ── Thumbnail (projects that have a photo) ── */
               <>
                 <Image
                   src={project.image}
@@ -232,7 +219,7 @@ function FullProjectCard({
                   <p className="font-sans text-xs text-white/70 mt-1">{project.title}</p>
                 </div>
 
-                {/* Play overlay — only for Instagram reels */}
+                {/* Play overlay — only for projects with an Instagram reel */}
                 {embedUrl && (
                   <div
                     className="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/25"
@@ -249,7 +236,6 @@ function FullProjectCard({
                 )}
               </>
             ) : (
-              /* ── No-image fallback: big number + label (pure CSS, no <Image>) ── */
               <>
                 {/* Top color strip */}
                 <div
@@ -290,7 +276,6 @@ function FullProjectCard({
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [activeTab, setActiveTab] = useState<"all" | "upcoming" | "completed">("all");
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
@@ -299,26 +284,19 @@ export default function ProjectsPage() {
     contentService.getProjects().then(setProjects);
   }, []);
 
-  const filtered = projects.filter((p) =>
-    activeTab === "all" ? true : p.status === activeTab
-  );
-
-  const upcoming = projects.filter((p) => p.status === "upcoming").length;
-  const completed = projects.filter((p) => p.status === "completed").length;
-
   // Lenis scroll-snap: snap to nearest full card (100vh) on scroll stop
   const snapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastSnapRef = useRef<number>(-1);
 
   const snapToCard = useCallback(
     (lenis: ReturnType<typeof useLenis>) => {
-      if (!lenis || !wrapperRef.current || !filtered.length) return;
+      if (!lenis || !wrapperRef.current || !projects.length) return;
       const wrapperTop = wrapperRef.current.getBoundingClientRect().top + window.scrollY;
       const scrollY = window.scrollY;
       const relativeScroll = scrollY - wrapperTop;
       const vh = window.innerHeight;
       const cardIndex = Math.round(relativeScroll / vh);
-      const clampedIndex = Math.max(0, Math.min(cardIndex, filtered.length - 1));
+      const clampedIndex = Math.max(0, Math.min(cardIndex, projects.length - 1));
       const targetY = wrapperTop + clampedIndex * vh;
 
       if (Math.abs(scrollY - targetY) > 8 && lastSnapRef.current !== clampedIndex) {
@@ -326,21 +304,19 @@ export default function ProjectsPage() {
         lenis.scrollTo(targetY, { duration: 0.7, easing: (t: number) => 1 - Math.pow(1 - t, 3) });
       }
     },
-    [filtered.length]
+    [projects.length]
   );
 
   const lenis = useLenis(({ scroll: _ }) => {
-    // Debounce snap: fire 180ms after scroll stops
     if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
     snapTimeoutRef.current = setTimeout(() => {
-      // @ts-expect-error — lenis instance is available via useLenis callback
+      // @ts-expect-error — lenis instance stored globally for timeout callback
       snapToCard(window.__lenis);
     }, 180);
   });
 
   useEffect(() => {
     if (lenis) {
-      // Store lenis ref globally for the timeout callback
       // @ts-expect-error
       window.__lenis = lenis;
     }
@@ -351,11 +327,11 @@ export default function ProjectsPage() {
 
   useGSAP(
     () => {
-      if (!filtered.length || !wrapperRef.current || !stickyRef.current) return;
+      if (!projects.length || !wrapperRef.current || !stickyRef.current) return;
 
       ScrollTrigger.getAll().forEach((t) => t.kill());
 
-      const N = filtered.length;
+      const N = projects.length;
       if (N <= 1) return;
 
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -430,7 +406,7 @@ export default function ProjectsPage() {
 
       return () => ScrollTrigger.getAll().forEach((t) => t.kill());
     },
-    { dependencies: [filtered] }
+    { dependencies: [projects] }
   );
 
   return (
@@ -450,7 +426,7 @@ export default function ProjectsPage() {
         <BlurFade delay={0.12} inView>
           <div className="inline-flex items-center rounded-full border border-accent/30 bg-accent/8 px-4 py-1.5 mb-4">
             <AnimatedShinyText className="font-sans text-xs font-semibold uppercase tracking-[0.22em] text-accent">
-              ✦ Aagaz &apos;25 — Our Work
+              ✦ Aagaz &apos;26–27 — Our Work
             </AnimatedShinyText>
           </div>
           <h1 className="font-heading font-bold text-[clamp(2.5rem,7vw,5.5rem)] text-text leading-[0.98] tracking-tight">
@@ -465,53 +441,24 @@ export default function ProjectsPage() {
           </p>
         </BlurFade>
 
-        {/* Stats */}
+        {/* Stats — total count + season label, no status breakdown */}
         <BlurFade delay={0.3} inView>
           <div className="flex items-center gap-6 mt-8">
             <div className="flex flex-col">
               <span className="font-heading font-bold text-3xl text-text">{projects.length}</span>
-              <span className="font-sans text-xs text-text-muted uppercase tracking-wider">Total</span>
+              <span className="font-sans text-xs text-text-muted uppercase tracking-wider">Projects</span>
             </div>
             <div className="w-px h-10 bg-border" />
             <div className="flex flex-col">
-              <span className="font-heading font-bold text-3xl text-text">{completed}</span>
-              <span className="font-sans text-xs text-text-muted uppercase tracking-wider">Completed</span>
+              <span className="font-heading font-bold text-3xl text-accent">26–27</span>
+              <span className="font-sans text-xs text-text-muted uppercase tracking-wider">Season</span>
             </div>
-            <div className="w-px h-10 bg-border" />
-            <div className="flex flex-col">
-              <span className="font-heading font-bold text-3xl text-accent">{upcoming}</span>
-              <span className="font-sans text-xs text-text-muted uppercase tracking-wider">Upcoming</span>
-            </div>
-          </div>
-        </BlurFade>
-
-        {/* Tabs */}
-        <BlurFade delay={0.38} inView>
-          <div className="flex items-center gap-2 mt-8">
-            {([
-              { key: "all", label: `All (${projects.length})` },
-              { key: "upcoming", label: `Upcoming (${upcoming})` },
-              { key: "completed", label: `Completed (${completed})` },
-            ] as const).map((tab) => (
-              <button
-                key={tab.key}
-                onClick={() => { setActiveTab(tab.key); setActiveCardIndex(0); }}
-                className={cn(
-                  "font-sans text-sm font-semibold px-4 py-2 rounded-full border transition-colors duration-200",
-                  activeTab === tab.key
-                    ? "bg-accent text-background border-accent"
-                    : "border-border/50 text-text-muted hover:border-accent/40 hover:text-text"
-                )}
-              >
-                {tab.label}
-              </button>
-            ))}
           </div>
         </BlurFade>
       </div>
 
       {/* Scroll hint */}
-      <BlurFade delay={0.45} inView>
+      <BlurFade delay={0.4} inView>
         <div className="max-w-5xl mx-auto px-6 md:px-16 pb-6 flex items-center gap-2 text-text-muted/50">
           <span className="font-sans text-xs uppercase tracking-widest">Scroll to explore</span>
           <ArrowDown size={14} aria-hidden />
@@ -521,15 +468,15 @@ export default function ProjectsPage() {
       {/* Scroll wrapper: each project card occupies 100vh */}
       <div
         ref={wrapperRef}
-        style={{ height: `${Math.max(filtered.length, 1) * 100}vh` }}
+        style={{ height: `${Math.max(projects.length, 1) * 100}vh` }}
       >
         <div
           ref={stickyRef}
           className="sticky top-0 h-screen overflow-hidden bg-background"
         >
-          {filtered.map((project, i) => (
+          {projects.map((project, i) => (
             <FullProjectCard
-              key={`${project.id}-${activeTab}`}
+              key={project.id}
               project={project}
               index={i}
               flip={i % 2 === 1}
@@ -539,7 +486,7 @@ export default function ProjectsPage() {
 
           {/* Progress dots */}
           <div className="absolute right-5 top-1/2 -translate-y-1/2 z-[200] flex flex-col gap-2 pointer-events-none">
-            {filtered.map((_, i) => (
+            {projects.map((_, i) => (
               <div
                 key={i}
                 className="w-1.5 rounded-full transition-all duration-300"

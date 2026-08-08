@@ -5,9 +5,54 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { motion } from "framer-motion";
-import { MapPin, Instagram, Facebook, Linkedin, Link2 } from "lucide-react";
+import { MapPin, Link2 } from "lucide-react";
 import { contentService } from "@/services/content.service";
 import type { ContactContent } from "@/types/content.types";
+
+/* Inline SVG brand icons — lucide-react doesn't ship brand icons in this version */
+function IconInstagram({ size = 13 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+function IconLinkedIn({ size = 13 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+      <rect x="2" y="9" width="4" height="12" />
+      <circle cx="4" cy="4" r="2" />
+    </svg>
+  );
+}
+function IconFacebook({ size = 13 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+    </svg>
+  );
+}
+function IconX({ size = 13 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
+function getSocialIcon(platform: string) {
+  switch (platform) {
+    case "Instagram": return <IconInstagram />;
+    case "LinkedIn":  return <IconLinkedIn />;
+    case "Facebook":  return <IconFacebook />;
+    case "Twitter":
+    case "X":        return <IconX />;
+    default:         return <Link2 size={13} />;
+  }
+}
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -154,11 +199,7 @@ export function ContactSection() {
             <div className="font-heading font-semibold text-sm text-text uppercase tracking-wider">Follow Us</div>
             <div className="flex flex-col gap-2">
               {contactData?.socials.map((social) => {
-                const icon = {
-                  Instagram: <Instagram size={13} />,
-                  Facebook: <Facebook size={13} />,
-                  LinkedIn: <Linkedin size={13} />,
-                }[social.platform] ?? <Link2 size={13} />;
+                const icon = getSocialIcon(social.platform);
                 return (
                   <a
                     key={social.platform}

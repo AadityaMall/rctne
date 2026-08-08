@@ -69,7 +69,7 @@ function MemberCard({
       >
         {hasImage ? (
           <Image
-            src={member.image}
+            src={member.image!}
             alt={member.name}
             fill
             className="object-cover object-top"

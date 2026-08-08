@@ -158,3 +158,10 @@ html {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-6px); }
 }
+
+.float-slow {
+  animation: float-slow 4s ease-in-out infinite;
+}
+.float-slow-offset {
+  animation: float-slow 4s ease-in-out infinite 1s;
+}

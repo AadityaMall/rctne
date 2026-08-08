@@ -47,11 +47,11 @@ export interface AwardItem {
 export interface Project {
   id: string
   title: string
-  year: string
+  /** Month abbreviation this project runs, e.g. "Jun", "Apr" */
+  month: string
   category: string
   image: string
   detail: string
-  status: "completed" | "upcoming"
   instagramUrl?: string
 }
 

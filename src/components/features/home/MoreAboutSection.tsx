@@ -51,7 +51,7 @@ export function MoreAboutSection() {
               <div className="relative w-28 h-28 opacity-80">
                 <Image
                   src="/images/theme/aagaz-emblem.png"
-                  alt="Aagaz '25 theme emblem"
+                  alt="Aagaz '26–27 theme emblem"
                   width={112}
                   height={112}
                   className="w-full h-full object-contain drop-shadow-md"

@@ -101,7 +101,7 @@ export function ProjectsSection() {
               <PhotoCard
                 initials={project.title.slice(0, 2).toUpperCase()}
                 name={project.title}
-                role={`${project.category} · ${project.year}`}
+                role={`${project.category} · ${project.month}`}
                 detail={project.detail}
                 category={project.category}
                 rotate={rotations[i % rotations.length]}
