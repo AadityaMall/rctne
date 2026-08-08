@@ -152,3 +152,9 @@
 html {
   scroll-behavior: auto; /* Lenis handles smooth scroll */
 }
+
+/* ─── Hero badge float — CSS animation, zero JS cost ─── */
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-6px); }
+}

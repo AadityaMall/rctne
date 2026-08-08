@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -51,12 +52,25 @@ export function Navbar() {
               : "bg-background/80 backdrop-blur-md border border-border/50 shadow-[0_2px_12px_oklch(22%_0.02_50_/_0.06)]"
           )}
         >
-          {/* Brand */}
-          <Link
-            href="/"
-            className="font-heading text-xl font-bold tracking-tight text-text hover:text-accent transition-colors duration-200"
-          >
-            RCTNE
+          <Link href="/" className="flex items-center shrink-0" aria-label="Rotaract Club of Thane North End — Home">
+            {/* Light mode: dark logo — natural aspect ratio, just fixed height */}
+            <Image
+              src="/images/theme/logo-black-cropped.png"
+              alt="Rotaract Club of Thane North End"
+              width={1211}
+              height={277}
+              className="h-11 w-auto dark:hidden"
+              priority
+            />
+            {/* Dark mode: white logo */}
+            <Image
+              src="/images/theme/logo-white-cropped.png"
+              alt="Rotaract Club of Thane North End"
+              width={1211}
+              height={277}
+              className="h-11 w-auto hidden dark:block"
+              priority
+            />
           </Link>
 
           {/* Desktop Nav */}
@@ -130,7 +144,22 @@ export function Navbar() {
               transition={{ type: "spring", stiffness: 320, damping: 34 }}
               className="fixed top-0 right-0 bottom-0 z-50 w-[80vw] max-w-[320px] bg-background/97 backdrop-blur-3xl border-l border-border/50 flex flex-col px-8 pt-24 pb-12 md:hidden"
             >
-              <div className="font-heading text-3xl font-bold text-text mb-6">RCTNE</div>
+              <div className="mb-6">
+                <Image
+                  src="/images/theme/logo-black-cropped.png"
+                  alt="Rotaract Club of Thane North End"
+                  width={200}
+                  height={60}
+                  className="h-10 w-auto object-contain dark:hidden"
+                />
+                <Image
+                  src="/images/theme/logo-white-cropped.png"
+                  alt="Rotaract Club of Thane North End"
+                  width={200}
+                  height={60}
+                  className="h-10 w-auto object-contain hidden dark:block"
+                />
+              </div>
               <div className="flex flex-col gap-1">
                 {navLinks.map((link, i) => {
                   const active = isActive(link.href);

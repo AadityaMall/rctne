@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useLenis } from "lenis/react";
-import { ArrowLeft, X, Play } from "lucide-react";
+import { ArrowLeft, ArrowDown, X, Play } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { contentService } from "@/services/content.service";
@@ -514,9 +514,7 @@ export default function ProjectsPage() {
       <BlurFade delay={0.45} inView>
         <div className="max-w-5xl mx-auto px-6 md:px-16 pb-6 flex items-center gap-2 text-text-muted/50">
           <span className="font-sans text-xs uppercase tracking-widest">Scroll to explore</span>
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
-            <path d="M7 2v10M3 8l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          <ArrowDown size={14} aria-hidden />
         </div>
       </BlurFade>
 

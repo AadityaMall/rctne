@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { NumberTicker } from "@/components/ui/number-ticker";
+import Image from "next/image";
 import { contentService } from "@/services/content.service";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import type { MoreAboutContent } from "@/types/content.types";
@@ -41,10 +42,22 @@ export function MoreAboutSection() {
         {/* Header + body */}
         <div className="grid md:grid-cols-[2fr_3fr] gap-12 md:gap-20 items-start">
           <BlurFade delay={0.1} inView>
-            <SectionHeader
-              number={content?.number ?? "04"}
-              title={content?.title ?? "Our Impact"}
-            />
+            <div className="flex flex-col gap-6">
+              <SectionHeader
+                number={content?.number ?? "04"}
+                title={content?.title ?? "Our Impact"}
+              />
+              {/* Aagaz emblem */}
+              <div className="relative w-28 h-28 opacity-80">
+                <Image
+                  src="/images/theme/aagaz-emblem.png"
+                  alt="Aagaz '25 theme emblem"
+                  width={112}
+                  height={112}
+                  className="w-full h-full object-contain drop-shadow-md"
+                />
+              </div>
+            </div>
           </BlurFade>
           <BlurFade delay={0.25} inView>
             <p className="font-sans text-lg text-text-muted leading-relaxed max-w-md pt-2">

@@ -23,7 +23,24 @@ export function Footer() {
 
           {/* Brand */}
           <div className="flex flex-col gap-3 max-w-xs">
-            <div className="font-heading font-bold text-2xl text-text">RCTNE</div>
+            <div>
+              {/* Light mode: dark logo */}
+              <Image
+                src="/images/theme/logo-black-cropped.png"
+                alt="Rotaract Club of Thane North End"
+                width={1211}
+                height={277}
+                className="h-10 w-auto dark:hidden"
+              />
+              {/* Dark mode: white logo */}
+              <Image
+                src="/images/theme/logo-white-cropped.png"
+                alt="Rotaract Club of Thane North End"
+                width={1211}
+                height={277}
+                className="h-10 w-auto hidden dark:block"
+              />
+            </div>
             <p className="font-sans text-sm text-text-muted leading-relaxed">
               Rotaract Club of Thane North End.<br />
               Young leaders. Real impact.

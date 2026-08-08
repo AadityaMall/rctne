@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { motion } from "framer-motion";
+import { MapPin, Instagram, Facebook, Linkedin, Link2 } from "lucide-react";
 import { contentService } from "@/services/content.service";
 import type { ContactContent } from "@/types/content.types";
 
@@ -132,10 +133,7 @@ export function ContactSection() {
           <div className="w-full aspect-video bg-surface border border-border/40 rounded-2xl flex items-center justify-center relative overflow-hidden">
             <div className="absolute inset-0 dot-grid" />
             <div className="relative z-10 flex flex-col items-center gap-2 text-text-muted">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-                <circle cx="12" cy="9" r="2.5" />
-              </svg>
+              <MapPin size={28} strokeWidth={1.5} />
               <span className="font-sans text-xs">Thane, Maharashtra</span>
             </div>
           </div>
@@ -155,18 +153,27 @@ export function ContactSection() {
           <div className="flex flex-col gap-3">
             <div className="font-heading font-semibold text-sm text-text uppercase tracking-wider">Follow Us</div>
             <div className="flex flex-col gap-2">
-              {contactData?.socials.map((social) => (
-                <a
-                  key={social.platform}
-                  href={social.url}
-                  className="font-sans text-sm text-text-muted hover:text-accent transition-colors flex items-center gap-2"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent/60" />
-                  {social.platform}
-                  <span className="text-text-muted/50">·</span>
-                  <span>{social.handle}</span>
-                </a>
-              ))}
+              {contactData?.socials.map((social) => {
+                const icon = {
+                  Instagram: <Instagram size={13} />,
+                  Facebook: <Facebook size={13} />,
+                  LinkedIn: <Linkedin size={13} />,
+                }[social.platform] ?? <Link2 size={13} />;
+                return (
+                  <a
+                    key={social.platform}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-sans text-sm text-text-muted hover:text-accent transition-colors flex items-center gap-2"
+                  >
+                    <span className="text-accent/70">{icon}</span>
+                    {social.platform}
+                    <span className="text-text-muted/50">·</span>
+                    <span>{social.handle}</span>
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
