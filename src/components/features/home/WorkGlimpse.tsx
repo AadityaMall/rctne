@@ -45,6 +45,7 @@ function ProjectImageCard({ project, index, delay }: ProjectImageCardProps) {
                 src={project.image}
                 alt={project.title}
                 fill
+                loading="lazy"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />

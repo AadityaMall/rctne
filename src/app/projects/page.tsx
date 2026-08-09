@@ -197,6 +197,7 @@ function FullProjectCard({
                   src={project.image}
                   alt={project.title}
                   fill
+                  loading="lazy"
                   className="object-cover z-10 p-[4px] pt-0 rounded-[12px]"
                   sizes="(max-width: 768px) 0vw, 50vw"
                 />

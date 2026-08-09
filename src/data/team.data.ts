@@ -251,45 +251,6 @@ const boardMembers: TeamMember[] = [
   },
 ]
 
-// ─── General Body ────────────────────────────────────────────────
-const generalMembers: TeamMember[] = [
-  {
-    id: "gen-1",
-    name: "Reya",
-    role: "General Body Member",
-    tier: "general",
-    initials: "R",
-  },
-  {
-    id: "gen-2",
-    name: "Smit",
-    role: "General Body Member",
-    tier: "general",
-    initials: "S",
-  },
-  {
-    id: "gen-3",
-    name: "Ashrusha",
-    role: "General Body Member",
-    tier: "general",
-    initials: "A",
-  },
-  {
-    id: "gen-4",
-    name: "Manas",
-    role: "General Body Member",
-    tier: "general",
-    initials: "M",
-  },
-  {
-    id: "gen-5",
-    name: "Rohan",
-    role: "General Body Member",
-    tier: "general",
-    initials: "R",
-  },
-]
-
 export const teamTiers: TeamTierGroup[] = [
   {
     number: "01",
@@ -304,12 +265,5 @@ export const teamTiers: TeamTierGroup[] = [
     title: "Board of Directors",
     subtitle: "Driving strategy and direction across all service avenues.",
     members: boardMembers,
-  },
-  {
-    number: "03",
-    tier: "general",
-    title: "General Body",
-    subtitle: "The heart of our club — members making change happen on the ground.",
-    members: generalMembers,
-  },
+  }
 ]

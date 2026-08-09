@@ -4,8 +4,8 @@ export const contact: ContactContent = {
   email: "hello@rctne.org",
   socials: [
     { platform: "Instagram", url: "https://www.instagram.com/rc_thanenorthend/", handle: "@rc_thanenorthend" },
-    { platform: "LinkedIn", url: "#", handle: "RCTNE" },
-    { platform: "Twitter", url: "#", handle: "@rctne" },
+    { platform: "LinkedIn", url: "https://www.linkedin.com/company/rctne/", handle: "RCTNE" },
+    // { platform: "TRS Chair", url: "#", handle: "@rctne" },
   ],
 }
 

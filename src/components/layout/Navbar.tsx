@@ -59,8 +59,8 @@ export function Navbar() {
               alt="Rotaract Club of Thane North End"
               width={1211}
               height={277}
+              loading="lazy"
               className="h-11 w-auto dark:hidden"
-              priority
             />
             {/* Dark mode: white logo */}
             <Image
@@ -68,8 +68,8 @@ export function Navbar() {
               alt="Rotaract Club of Thane North End"
               width={1211}
               height={277}
+              loading="lazy"
               className="h-11 w-auto hidden dark:block"
-              priority
             />
           </Link>
 
@@ -150,6 +150,7 @@ export function Navbar() {
                   alt="Rotaract Club of Thane North End"
                   width={200}
                   height={60}
+                  loading="lazy"
                   className="h-10 w-auto object-contain dark:hidden"
                 />
                 <Image
@@ -157,6 +158,7 @@ export function Navbar() {
                   alt="Rotaract Club of Thane North End"
                   width={200}
                   height={60}
+                  loading="lazy"
                   className="h-10 w-auto object-contain hidden dark:block"
                 />
               </div>

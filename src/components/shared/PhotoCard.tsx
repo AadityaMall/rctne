@@ -73,6 +73,7 @@ export function PhotoCard({
             src={image}
             alt={name}
             fill
+            loading="lazy"
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 50vw"
           />

@@ -201,6 +201,7 @@ export function Footer() {
                 alt="Rotaract Club of Thane North End"
                 width={1211}
                 height={277}
+                loading="lazy"
                 className="h-10 w-auto dark:hidden"
               />
               <Image
@@ -208,6 +209,7 @@ export function Footer() {
                 alt="Rotaract Club of Thane North End"
                 width={1211}
                 height={277}
+                loading="lazy"
                 className="h-10 w-auto hidden dark:block"
               />
             </div>

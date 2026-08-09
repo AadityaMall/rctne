@@ -77,6 +77,7 @@ function MemberCard({
             src={member.image!}
             alt={member.name}
             fill
+            loading="lazy"
             className="object-cover object-top"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
           />
