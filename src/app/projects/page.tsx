@@ -1,10 +1,9 @@
 "use client";
 
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { useLenis } from "lenis/react";
 import { ArrowLeft, ArrowDown, X, Play } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -283,47 +282,6 @@ export default function ProjectsPage() {
   useEffect(() => {
     contentService.getProjects().then(setProjects);
   }, []);
-
-  // Lenis scroll-snap: snap to nearest full card (100vh) on scroll stop
-  const snapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lastSnapRef = useRef<number>(-1);
-
-  const snapToCard = useCallback(
-    (lenis: ReturnType<typeof useLenis>) => {
-      if (!lenis || !wrapperRef.current || !projects.length) return;
-      const wrapperTop = wrapperRef.current.getBoundingClientRect().top + window.scrollY;
-      const scrollY = window.scrollY;
-      const relativeScroll = scrollY - wrapperTop;
-      const vh = window.innerHeight;
-      const cardIndex = Math.round(relativeScroll / vh);
-      const clampedIndex = Math.max(0, Math.min(cardIndex, projects.length - 1));
-      const targetY = wrapperTop + clampedIndex * vh;
-
-      if (Math.abs(scrollY - targetY) > 8 && lastSnapRef.current !== clampedIndex) {
-        lastSnapRef.current = clampedIndex;
-        lenis.scrollTo(targetY, { duration: 0.7, easing: (t: number) => 1 - Math.pow(1 - t, 3) });
-      }
-    },
-    [projects.length]
-  );
-
-  const lenis = useLenis(({ scroll: _ }) => {
-    if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
-    snapTimeoutRef.current = setTimeout(() => {
-      // @ts-expect-error — lenis instance stored globally for timeout callback
-      snapToCard(window.__lenis);
-    }, 180);
-  });
-
-  useEffect(() => {
-    if (lenis) {
-      // @ts-expect-error
-      window.__lenis = lenis;
-    }
-    return () => {
-      if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
-    };
-  }, [lenis]);
 
   useGSAP(
     () => {

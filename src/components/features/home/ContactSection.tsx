@@ -1,9 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Link2 } from "lucide-react";
 import { contentService } from "@/services/content.service";
@@ -54,11 +51,9 @@ function getSocialIcon(platform: string) {
   }
 }
 
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+
 
 export function ContactSection() {
-  const containerRef = useRef<HTMLElement>(null);
-  const closingRef = useRef<HTMLDivElement>(null);
   const [contactData, setContactData] = useState<ContactContent | null>(null);
   const [closingStatement, setClosingStatement] = useState<string>("");
 
@@ -72,35 +67,21 @@ export function ContactSection() {
     });
   }, []);
 
-  useGSAP(
-    () => {
-      if (!closingStatement) return;
-      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (prefersReducedMotion) {
-        gsap.set(closingRef.current, { opacity: 1 });
-        return;
-      }
-      gsap.set(closingRef.current, { opacity: 0, y: 30 });
-      gsap.to(closingRef.current, {
-        scrollTrigger: { trigger: containerRef.current, start: "top 70%", once: true },
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: "power3.out",
-      });
-    },
-    { scope: containerRef, dependencies: [closingStatement] }
-  );
 
   return (
     <section
-      ref={containerRef}
       id="contact"
       data-section="contact"
       className="pt-28 pb-0 px-6 bg-background"
     >
       {/* Closing CTA statement */}
-      <div ref={closingRef} className="max-w-5xl mx-auto w-full text-center mb-24 md:mb-32 flex flex-col items-center gap-2">
+      <motion.div
+        className="max-w-5xl mx-auto w-full text-center mb-24 md:mb-32 flex flex-col items-center gap-2"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+      >
         <h2 className="font-heading font-bold text-[clamp(3rem,9vw,7rem)] tracking-tight text-text leading-[1.0] uppercase">
           {closingStatement}
         </h2>
@@ -110,7 +91,7 @@ export function ContactSection() {
         >
           {closingStatement}
         </h2>
-      </div>
+      </motion.div>
 
       {/* Contact form + info */}
       <div className="max-w-5xl mx-auto w-full grid md:grid-cols-2 gap-16 pb-28">

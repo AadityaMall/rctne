@@ -150,7 +150,7 @@
 
 /* ─── Scroll utilities ─── */
 html {
-  scroll-behavior: auto; /* Lenis handles smooth scroll */
+  scroll-behavior: smooth;
 }
 
 /* ─── Hero badge float — CSS animation, zero JS cost ─── */

@@ -1,11 +1,6 @@
 "use client";
 
-import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+import { motion } from "framer-motion";
 
 interface TestimonialBlockProps {
   quote: string;
@@ -14,35 +9,16 @@ interface TestimonialBlockProps {
 }
 
 export function TestimonialBlock({ quote, name, role }: TestimonialBlockProps) {
-  const containerRef = useRef<HTMLElement>(null);
-  const innerRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(
-    () => {
-      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (prefersReducedMotion) {
-        gsap.set(innerRef.current, { opacity: 1, y: 0 });
-        return;
-      }
-      gsap.set(innerRef.current, { opacity: 0, y: 24 });
-      gsap.to(innerRef.current, {
-        scrollTrigger: { trigger: containerRef.current, start: "top 80%", once: true },
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: "power3.out",
-      });
-    },
-    { scope: containerRef }
-  );
-
   return (
-    <section
-      ref={containerRef}
-      className="py-20 md:py-28 px-6 bg-background border-y border-border/40"
-    >
+    <section className="py-20 md:py-28 px-6 bg-background border-y border-border/40">
       <div className="max-w-3xl mx-auto w-full">
-        <div ref={innerRef} className="flex flex-col gap-8">
+        <motion.div
+          className="flex flex-col gap-8"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        >
           {/* Large opening quote mark */}
           <svg
             aria-hidden="true"
@@ -64,7 +40,7 @@ export function TestimonialBlock({ quote, name, role }: TestimonialBlockProps) {
               <div className="font-sans text-sm text-text-muted mt-0.5">{role}</div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

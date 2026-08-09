@@ -1,9 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -11,8 +8,6 @@ import Image from "next/image";
 import { contentService } from "@/services/content.service";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import type { TeamTierGroup, TeamMember } from "@/types/content.types";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const ROTATIONS = [-1.5, 0.8, -0.5, 1.2, -1, 0.5];
 
@@ -40,6 +35,16 @@ const tierGridCols: Record<string, string> = {
   core:     "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5",
   board:    "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5",
   general:  "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6",
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 30, scale: 0.96 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number], delay: i * 0.05 },
+  }),
 };
 
 function MemberCard({
@@ -120,61 +125,22 @@ function MemberCard({
 }
 
 function TierSection({ tier }: { tier: TeamTierGroup }) {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
-  const headerRef = useRef<HTMLDivElement>(null);
   const isCompact = tier.tier === "general";
 
-  useGSAP(
-    () => {
-      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const cards = cardsRef.current.filter(Boolean);
-      if (!cards.length || prefersReducedMotion) return;
-
-      gsap.set(cards, { opacity: 0, y: 30, scale: 0.96 });
-      ScrollTrigger.batch(cards, {
-        onEnter: (batch) => {
-          gsap.to(batch, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            stagger: 0.06,
-            duration: 0.6,
-            ease: "power3.out",
-          });
-        },
-        once: true,
-        start: "top 88%",
-      });
-    },
-    { scope: sectionRef }
-  );
-
-  useGSAP(
-    () => {
-      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (prefersReducedMotion) return;
-      gsap.set(headerRef.current, { opacity: 0, x: -20 });
-      gsap.to(headerRef.current, {
-        scrollTrigger: { trigger: headerRef.current, start: "top 82%", once: true },
-        opacity: 1,
-        x: 0,
-        duration: 0.8,
-        ease: "power3.out",
-      });
-    },
-    { scope: sectionRef }
-  );
-
   return (
-    <div ref={sectionRef} className="flex flex-col gap-10">
-      <div ref={headerRef}>
+    <div className="flex flex-col gap-10">
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true, amount: 0.5 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      >
         <SectionHeader
           number={tier.number}
           title={tier.title}
           subtitle={tier.subtitle}
         />
-      </div>
+      </motion.div>
 
       <div
         className={`grid gap-x-5 gap-y-8 ${tierGridCols[tier.tier]} ${
@@ -182,16 +148,20 @@ function TierSection({ tier }: { tier: TeamTierGroup }) {
         }`}
       >
         {tier.members.map((member, i) => (
-          <div
+          <motion.div
             key={member.id}
-            ref={(el) => { cardsRef.current[i] = el; }}
+            custom={i}
+            variants={cardVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.1 }}
           >
             <MemberCard
               member={member}
               index={i}
               isCompact={isCompact}
             />
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>
@@ -200,37 +170,22 @@ function TierSection({ tier }: { tier: TeamTierGroup }) {
 
 export default function TeamPage() {
   const [tiers, setTiers] = useState<TeamTierGroup[]>([]);
-  const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     contentService.getTeamTiers().then(setTiers);
   }, []);
-
-  useGSAP(
-    () => {
-      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (prefersReducedMotion) {
-        gsap.set(heroRef.current, { opacity: 1, y: 0 });
-        return;
-      }
-      gsap.set(heroRef.current, { opacity: 0, y: 24 });
-      gsap.to(heroRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.9,
-        ease: "power3.out",
-        delay: 0.15,
-      });
-    },
-    { scope: heroRef }
-  );
 
   return (
     <main className="min-h-screen pt-28 pb-32 px-6 relative z-10 w-full">
       <div className="max-w-6xl mx-auto w-full flex flex-col gap-28 md:gap-36">
 
         {/* Header */}
-        <div ref={heroRef} className="flex flex-col gap-8">
+        <motion.div
+          className="flex flex-col gap-8"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+        >
           <Link
             href="/"
             className="inline-flex items-center gap-2 font-sans text-sm text-text-muted hover:text-accent transition-colors w-fit"
@@ -255,7 +210,7 @@ export default function TeamPage() {
               Meet the driven individuals who make RCTNE what it is — from core leadership to every director steering our service avenues.
             </p>
           </div>
-        </div>
+        </motion.div>
 
         {/* Tier sections */}
         {tiers.map((tier) => (
