@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { NumberTicker } from "@/components/ui/number-ticker";
-import Image from "next/image";
 import { contentService } from "@/services/content.service";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import type { MoreAboutContent } from "@/types/content.types";
@@ -44,7 +43,7 @@ export function MoreAboutSection() {
           <BlurFade delay={0.1} inView>
             <div className="flex flex-col gap-6">
               <SectionHeader
-                number={content?.number ?? "04"}
+                number={content?.number ?? "03"}
                 title={content?.title ?? "Our Impact"}
               />
             </div>

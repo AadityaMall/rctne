@@ -28,7 +28,7 @@ export function ClosingCTA() {
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-1">
                   <span className="font-heading font-bold text-5xl text-accent/20 block">
-                    06
+                    07
                   </span>
                   <h2 className="font-heading font-bold text-[clamp(2.5rem,6vw,5rem)] text-text leading-[0.98] tracking-tight">
                     Want to be part
