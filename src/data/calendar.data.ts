@@ -1,7 +1,7 @@
 import type { CalendarSection } from "@/types/content.types"
 
 export const calendar: CalendarSection = {
-  number: "03",
+  number: "05",
   title: "Events",
   events: [
     {

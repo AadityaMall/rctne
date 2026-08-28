@@ -220,33 +220,25 @@ export function Footer() {
           {/* Navigation */}
           <div className="flex flex-col md:flex-row gap-10">
             <div className="flex flex-col gap-3">
-              <div className="font-heading font-semibold text-sm text-text uppercase tracking-wider">Navigate</div>
+              <div className="font-heading font-semibold text-sm text-text uppercase tracking-wider">Quick Links</div>
               {(
                 [
+                  { href: "/",         label: "Home"     },
                   { href: "/about",    label: "About"    },
+                  { href: "/team",     label: "Team"     },
                   { href: "/projects", label: "Projects" },
+                  { href: "/contact",  label: "Join Us"  },
                   { href: "/contact",  label: "Contact"  },
                 ] as const
               ).map(({ href, label }) => (
                 <Link
-                  key={href}
+                  key={label}
                   href={href}
                   className="font-sans text-sm text-text-muted hover:text-accent transition-colors"
                 >
                   {label}
                 </Link>
               ))}
-            </div>
-
-            <div className="flex flex-col gap-3">
-              <div className="font-heading font-semibold text-sm text-text uppercase tracking-wider">Team</div>
-              <Link
-                href="/team"
-                className="inline-flex items-center gap-1.5 font-sans text-sm text-accent hover:text-accent/80 transition-colors font-medium"
-              >
-                Meet the Team
-                <ArrowRight size={14} />
-              </Link>
             </div>
           </div>
 
@@ -263,6 +255,12 @@ export function Footer() {
                 {socials[0].handle}
               </p>
             )}
+            <a
+              href="mailto:hello@rctne.org"
+              className="font-sans text-xs text-text-muted hover:text-accent transition-colors mt-1"
+            >
+              hello@rctne.org
+            </a>
           </div>
         </div>
 
