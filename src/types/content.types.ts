@@ -34,7 +34,13 @@ export interface AboutPageContent {
   vision: string
   history: string
   pillars: string[]
+  values: ValueItem[]
   awards: AwardItem[]
+}
+
+export interface ValueItem {
+  label: string
+  description: string
 }
 
 export interface AwardItem {
@@ -110,6 +116,7 @@ export interface TeamMember {
   id: string
   name: string
   role: string
+  tagline?: string
   image?: string
   tier: TeamTier
   initials: string

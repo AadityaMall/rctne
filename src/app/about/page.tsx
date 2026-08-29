@@ -115,7 +115,7 @@ export default async function AboutPage() {
       <section className="px-6 md:px-16 lg:px-24 py-16 md:py-24 max-w-5xl mx-auto">
         <BlurFade delay={0.1} inView>
           <span className="font-heading font-bold text-5xl text-accent/20 block mb-2">04</span>
-          <h2 className="font-heading font-bold text-2xl text-text mb-10">Areas of Focus</h2>
+          <h2 className="font-heading font-bold text-2xl text-text mb-10">What We Do</h2>
         </BlurFade>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
           {about.pillars.map((pillar, i) => (
@@ -133,10 +133,30 @@ export default async function AboutPage() {
 
       <div className="w-full h-px bg-border/40 max-w-5xl mx-auto px-6" />
 
-      {/* ── Awards ── */}
+      {/* ── Values ── */}
       <section className="px-6 md:px-16 lg:px-24 py-16 md:py-24 max-w-5xl mx-auto">
         <BlurFade delay={0.1} inView>
           <span className="font-heading font-bold text-5xl text-accent/20 block mb-2">05</span>
+          <h2 className="font-heading font-bold text-2xl text-text mb-10">Our Values</h2>
+        </BlurFade>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {about.values.map((value, i) => (
+            <BlurFade key={value.label} delay={0.08 + i * 0.07} inView>
+              <div className="flex flex-col gap-3 p-6 rounded-2xl border border-border/50 bg-surface hover:border-accent/30 transition-colors h-full">
+                <span className="font-heading font-bold text-lg text-text">{value.label}</span>
+                <p className="font-sans text-sm text-text-muted leading-relaxed">{value.description}</p>
+              </div>
+            </BlurFade>
+          ))}
+        </div>
+      </section>
+
+      <div className="w-full h-px bg-border/40 max-w-5xl mx-auto px-6" />
+
+      {/* ── Awards ── */}
+      <section className="px-6 md:px-16 lg:px-24 py-16 md:py-24 max-w-5xl mx-auto">
+        <BlurFade delay={0.1} inView>
+          <span className="font-heading font-bold text-5xl text-accent/20 block mb-2">06</span>
           <h2 className="font-heading font-bold text-2xl text-text mb-10">Recognition</h2>
         </BlurFade>
         <div className="flex flex-col divide-y divide-border/40">
