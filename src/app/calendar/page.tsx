@@ -66,7 +66,7 @@ export default async function CalendarPage() {
             <ul className="flex flex-col divide-y divide-border/40 mb-16">
               {upcoming.map((event, i) => (
                 <BlurFade key={event.id} delay={0.1 + i * 0.07} inView>
-                  <li className="flex flex-col md:flex-row md:items-center justify-between py-7 gap-4">
+                  <li className="flex flex-col md:flex-row md:items-start justify-between py-8 gap-6">
                     <div className="flex items-start gap-5">
                       <div
                         className="w-2.5 h-2.5 rounded-full shrink-0 mt-2"
@@ -80,11 +80,27 @@ export default async function CalendarPage() {
                           <span className="flex items-center gap-1.5"><Calendar size={12} />{event.date}</span>
                           <span className="flex items-center gap-1.5"><MapPin size={12} />{event.location}</span>
                         </div>
+                        {event.description && (
+                          <p className="font-sans text-sm text-text-muted leading-relaxed max-w-lg mt-1">
+                            {event.description}
+                          </p>
+                        )}
                       </div>
                     </div>
-                    <span className="ml-7 md:ml-0 inline-flex font-sans text-xs font-semibold uppercase tracking-wider text-text-muted border border-border/50 px-3 py-1.5 rounded-full">
-                      {event.type}
-                    </span>
+                    <div className="flex items-center gap-3 ml-7 md:ml-0 shrink-0">
+                      <span className="inline-flex font-sans text-xs font-semibold uppercase tracking-wider text-text-muted border border-border/50 px-3 py-1.5 rounded-full">
+                        {event.type}
+                      </span>
+                      {event.registrationUrl && (
+                        <Link
+                          href={event.registrationUrl}
+                          className="inline-flex items-center gap-1.5 font-sans text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full transition-colors"
+                          style={{ backgroundColor: "oklch(62% 0.17 40 / 0.12)", color: "oklch(62% 0.17 40)" }}
+                        >
+                          Register →
+                        </Link>
+                      )}
+                    </div>
                   </li>
                 </BlurFade>
               ))}
@@ -102,10 +118,10 @@ export default async function CalendarPage() {
                 </span>
               </h2>
             </BlurFade>
-            <ul className="flex flex-col divide-y divide-border/40 opacity-60">
+            <ul className="flex flex-col divide-y divide-border/40 opacity-70">
               {past.map((event, i) => (
                 <BlurFade key={event.id} delay={0.07 + i * 0.05} inView>
-                  <li className="flex flex-col md:flex-row md:items-center justify-between py-6 gap-3">
+                  <li className="flex flex-col md:flex-row md:items-start justify-between py-6 gap-3">
                     <div className="flex items-start gap-5">
                       <div className="w-2 h-2 rounded-full bg-border shrink-0 mt-2" />
                       <div className="flex flex-col gap-1.5">
@@ -114,9 +130,14 @@ export default async function CalendarPage() {
                           <span className="flex items-center gap-1.5"><Calendar size={12} />{event.date}</span>
                           <span className="flex items-center gap-1.5"><MapPin size={12} />{event.location}</span>
                         </div>
+                        {event.highlights && (
+                          <p className="font-sans text-xs text-text-muted/80 leading-relaxed max-w-lg mt-1 italic">
+                            ✦ {event.highlights}
+                          </p>
+                        )}
                       </div>
                     </div>
-                    <span className="ml-7 md:ml-0 font-sans text-xs text-text-muted border border-border/40 px-3 py-1.5 rounded-full">
+                    <span className="ml-7 md:ml-0 font-sans text-xs text-text-muted border border-border/40 px-3 py-1.5 rounded-full shrink-0">
                       {event.type}
                     </span>
                   </li>

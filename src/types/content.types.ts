@@ -58,6 +58,9 @@ export interface Project {
   category: string
   image: string
   detail: string
+  location?: string
+  why?: string
+  impact?: string
   instagramUrl?: string
 }
 
@@ -82,6 +85,9 @@ export interface CalendarEvent {
   location: string
   type: string
   status?: "upcoming" | "past"
+  description?: string
+  registrationUrl?: string
+  highlights?: string
 }
 
 // Stats / Impact
