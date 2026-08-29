@@ -9,6 +9,7 @@ import { calendar } from "@/data/calendar.data"
 import { moreAbout } from "@/data/more-about.data"
 import { contact, closing } from "@/data/contact.data"
 import { teamTiers } from "@/data/team.data"
+import { galleryItems } from "@/data/gallery.data"
 import type {
   NavLink,
   Partner,
@@ -21,6 +22,7 @@ import type {
   MoreAboutContent,
   ContactContent,
   TeamTierGroup,
+  GalleryItem,
 } from "@/types/content.types"
 
 export const contentService = {
@@ -36,4 +38,5 @@ export const contentService = {
   getContact: (): Promise<ContactContent> => Promise.resolve(contact),
   getClosingStatement: (): Promise<string> => Promise.resolve(closing.statement),
   getTeamTiers: (): Promise<TeamTierGroup[]> => Promise.resolve(teamTiers),
+  getGallery: (): Promise<GalleryItem[]> => Promise.resolve(galleryItems),
 }

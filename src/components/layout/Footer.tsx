@@ -227,6 +227,7 @@ export function Footer() {
                   { href: "/about",    label: "About"    },
                   { href: "/team",     label: "Team"     },
                   { href: "/projects", label: "Projects" },
+                  { href: "/gallery",  label: "Gallery"  },
                   { href: "/contact",  label: "Join Us"  },
                   { href: "/contact",  label: "Contact"  },
                 ] as const

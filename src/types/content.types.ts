@@ -135,3 +135,21 @@ export interface TeamTierGroup {
   subtitle: string
   members: TeamMember[]
 }
+
+// Gallery
+export type GalleryCategory =
+  | "Events"
+  | "Community Service"
+  | "Leadership"
+  | "Team"
+  | "Social Activities"
+  | "Special Moments"
+
+export interface GalleryItem {
+  id: string
+  src: string
+  alt: string
+  category: GalleryCategory
+  /** Optional short caption shown on hover */
+  caption?: string
+}
