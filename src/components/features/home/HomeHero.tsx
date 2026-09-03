@@ -170,7 +170,7 @@ export function HomeHero() {
           </div>
 
           {/* RIGHT: Emblem */}
-          <div className="hidden md:flex items-center justify-center">
+          <div className="flex items-center justify-center">
             <EmblemPanel />
           </div>
         </div>
