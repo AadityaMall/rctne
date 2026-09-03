@@ -25,7 +25,7 @@ export default async function ContactPage() {
         </BlurFade>
 
         {/* ── JOIN US SECTION ── */}
-        <section className="mb-24">
+        <section id="join-us" className="mb-24">
           <BlurFade delay={0.1} inView>
             <div className="inline-flex items-center rounded-full border border-accent/30 bg-accent/8 px-4 py-1.5 mb-5">
               <AnimatedShinyText className="font-sans text-xs font-semibold uppercase tracking-[0.22em] text-accent">
@@ -79,7 +79,7 @@ export default async function ContactPage() {
         <div className="h-px w-full bg-border/50 mb-24" />
 
         {/* ── CONTACT SECTION ── */}
-        <section>
+        <section id="contact-section">
           <BlurFade delay={0.1} inView>
             <h2 className="font-heading font-bold text-4xl text-text leading-[1] tracking-tight mb-12">
               Contact us

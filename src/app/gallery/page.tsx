@@ -92,6 +92,7 @@ function Lightbox({
             height={900}
             className="object-contain max-h-[85vh] rounded-xl shadow-2xl"
             priority
+            unoptimized={true}
           />
         </div>
         {/* Caption */}
