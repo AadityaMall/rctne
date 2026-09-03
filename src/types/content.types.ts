@@ -106,6 +106,8 @@ export interface MoreAboutContent {
 // Contact
 export interface ContactContent {
   email: string
+  phone: string
+  location: string
   socials: SocialLink[]
 }
 

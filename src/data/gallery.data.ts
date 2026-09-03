@@ -1,66 +1,63 @@
-import type { GalleryItem } from "@/types/content.types"
+import type { GalleryItem, GalleryCategory } from "@/types/content.types"
 
-/**
- * Gallery data — currently seeded with project images.
- * Replace / extend with actual gallery photos once uploaded to public/images/gallery/
- * Aim for 30–60 curated photos total across all categories.
- */
+export const galleryCategories: GalleryCategory[] = [
+  "Events",
+  "Community Service",
+  "Leadership",
+  "Team",
+  "Social Activities",
+  "Special Moments",
+];
+
 export const galleryItems: GalleryItem[] = [
-  // ── Community Service ──────────────────────────────────────────
-  {
-    id: "g-cs-1",
-    src: "/images/projects/project-k3.jpg",
-    alt: "K3 — Khaana Kapda Kambal distribution drive at Thane station",
-    category: "Community Service",
-    caption: "K3 — Food, clothes and blankets for those who need it most.",
-  },
-  {
-    id: "g-cs-2",
-    src: "/images/projects/project-biscute.jpg",
-    alt: "Biscute — Street dog feeding drive",
-    category: "Community Service",
-    caption: "Biscute — Feeding street dogs across Thane, every month.",
-  },
-  {
-    id: "g-cs-3",
-    src: "/images/projects/project-saksham.jpg",
-    alt: "Saksham — Women self-defence workshop",
-    category: "Community Service",
-    caption: "Saksham — Equipping women with confidence and self-defence.",
-  },
+  // Team (3)
+  { id: "g-1", src: "/images/gallery/gallery-01.jpg", alt: "RCTNE Team", category: "Team" },
+  { id: "g-15", src: "/images/gallery/gallery-15.jpg", alt: "RCTNE Team", category: "Team" },
+  { id: "g-39", src: "/images/gallery/gallery-39.jpg", alt: "RCTNE Team", category: "Team" },
+  
+  // Community Service (9)
+  { id: "g-2", src: "/images/gallery/gallery-02.jpg", alt: "Community Service", category: "Community Service" },
+  { id: "g-6", src: "/images/gallery/gallery-06.jpg", alt: "Community Service", category: "Community Service" },
+  { id: "g-16", src: "/images/gallery/gallery-16.jpg", alt: "Community Service", category: "Community Service" },
+  { id: "g-19", src: "/images/gallery/gallery-19.jpg", alt: "Community Service", category: "Community Service" },
+  { id: "g-21", src: "/images/gallery/gallery-21.jpg", alt: "Community Service", category: "Community Service" },
+  { id: "g-22", src: "/images/gallery/gallery-22.jpg", alt: "Community Service", category: "Community Service" },
+  { id: "g-30", src: "/images/gallery/gallery-30.jpg", alt: "Community Service", category: "Community Service" },
+  { id: "g-31", src: "/images/gallery/gallery-31.jpg", alt: "Community Service", category: "Community Service" },
+  { id: "g-34", src: "/images/gallery/gallery-34.jpg", alt: "Community Service", category: "Community Service" },
 
-  // ── Events ─────────────────────────────────────────────────────
-  {
-    id: "g-ev-1",
-    src: "/images/projects/project-moreya.jpg",
-    alt: "Moreya — Eco-friendly Ganpati awareness flash mob",
-    category: "Events",
-    caption: "Moreya — Dancing for a greener Ganpati celebration.",
-  },
+  // Events (10)
+  { id: "g-4", src: "/images/gallery/gallery-04.jpg", alt: "Events", category: "Events" },
+  { id: "g-5", src: "/images/gallery/gallery-05.jpg", alt: "Events", category: "Events" },
+  { id: "g-9", src: "/images/gallery/gallery-09.jpg", alt: "Events", category: "Events" },
+  { id: "g-10", src: "/images/gallery/gallery-10.jpg", alt: "Events", category: "Events" },
+  { id: "g-14", src: "/images/gallery/gallery-14.jpg", alt: "Events", category: "Events" },
+  { id: "g-23", src: "/images/gallery/gallery-23.jpg", alt: "Events", category: "Events" },
+  { id: "g-24", src: "/images/gallery/gallery-24.jpg", alt: "Events", category: "Events" },
+  { id: "g-26", src: "/images/gallery/gallery-26.jpg", alt: "Events", category: "Events" },
+  { id: "g-33", src: "/images/gallery/gallery-33.jpg", alt: "Events", category: "Events" },
+  { id: "g-37", src: "/images/gallery/gallery-37.jpg", alt: "Events", category: "Events" },
 
-  // ── Leadership ─────────────────────────────────────────────────
-  {
-    id: "g-ld-1",
-    src: "/images/projects/project-guns-for-glory.jpg",
-    alt: "Guns for Glory — Rifle shooting experience for youth",
-    category: "Leadership",
-    caption: "Guns for Glory — Focus, discipline, and a steady hand.",
-  },
+  // Leadership (2)
+  { id: "g-12", src: "/images/gallery/gallery-12.jpg", alt: "Leadership", category: "Leadership" },
+  { id: "g-13", src: "/images/gallery/gallery-13.jpg", alt: "Leadership", category: "Leadership" },
 
-  // ── Team ───────────────────────────────────────────────────────
-  {
-    id: "g-tm-1",
-    src: "/images/team/Core team/President_Khushi_Mahajan.jpg",
-    alt: "Khushi Mahajan — President, RCTNE 2026–27",
-    category: "Team",
-    caption: "Khushi Mahajan — President, Aagaz '26–27.",
-  },
-]
+  // Social Activities (11)
+  { id: "g-3", src: "/images/gallery/gallery-03.jpg", alt: "Social Activities", category: "Social Activities" },
+  { id: "g-7", src: "/images/gallery/gallery-07.jpg", alt: "Social Activities", category: "Social Activities" },
+  { id: "g-8", src: "/images/gallery/gallery-08.jpg", alt: "Social Activities", category: "Social Activities" },
+  { id: "g-11", src: "/images/gallery/gallery-11.jpg", alt: "Social Activities", category: "Social Activities" },
+  { id: "g-17", src: "/images/gallery/gallery-17.jpg", alt: "Social Activities", category: "Social Activities" },
+  { id: "g-18", src: "/images/gallery/gallery-18.jpg", alt: "Social Activities", category: "Social Activities" },
+  { id: "g-25", src: "/images/gallery/gallery-25.jpg", alt: "Social Activities", category: "Social Activities" },
+  { id: "g-27", src: "/images/gallery/gallery-27.jpg", alt: "Social Activities", category: "Social Activities" },
+  { id: "g-28", src: "/images/gallery/gallery-28.jpg", alt: "Social Activities", category: "Social Activities" },
+  { id: "g-32", src: "/images/gallery/gallery-32.jpg", alt: "Social Activities", category: "Social Activities" },
+  { id: "g-38", src: "/images/gallery/gallery-38.jpg", alt: "Social Activities", category: "Social Activities" },
 
-/**
- * NOTE TO MAINTAINER:
- * This is a starter set. To build a proper gallery:
- * 1. Upload 30–60 curated photos to public/images/gallery/
- * 2. Organise by category subfolder (events/, community/, team/, etc.)
- * 3. Add entries here following the GalleryItem interface
- */
+  // Special Moments (4)
+  { id: "g-20", src: "/images/gallery/gallery-20.jpg", alt: "Special Moments", category: "Special Moments" },
+  { id: "g-29", src: "/images/gallery/gallery-29.jpg", alt: "Special Moments", category: "Special Moments" },
+  { id: "g-35", src: "/images/gallery/gallery-35.jpg", alt: "Special Moments", category: "Special Moments" },
+  { id: "g-36", src: "/images/gallery/gallery-36.jpg", alt: "Special Moments", category: "Special Moments" },
+];

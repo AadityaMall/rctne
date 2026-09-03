@@ -7,19 +7,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { Marquee } from "@/components/ui/marquee";
+import { galleryItems, galleryCategories } from "@/data/gallery.data";
 
-// ─── Data ────────────────────────────────────────────────────────────────────
-const TOTAL = 39;
-const images = Array.from({ length: TOTAL }, (_, i) => ({
-  id: i + 1,
-  src: `/images/gallery/gallery-${String(i + 1).padStart(2, "0")}.jpg`,
-  alt: `RCTNE Aagaz '26–27 — Moment ${i + 1}`,
-}));
-
-// Grid shows first 7 photos + 1 "More" tile
 const GRID_DISPLAY_COUNT = 7;
-const gridImages = images.slice(0, GRID_DISPLAY_COUNT);
-const remainingCount = TOTAL - GRID_DISPLAY_COUNT;
 
 // ─── Lightbox ────────────────────────────────────────────────────────────────
 function Lightbox({
@@ -27,13 +17,16 @@ function Lightbox({
   onClose,
   onPrev,
   onNext,
+  images,
 }: {
   index: number;
   onClose: () => void;
   onPrev: () => void;
   onNext: () => void;
+  images: typeof galleryItems;
 }) {
   const img = images[index];
+  const TOTAL = images.length;
 
   // Keyboard nav
   useEffect(() => {
@@ -104,7 +97,7 @@ function Lightbox({
         {/* Caption */}
         <div className="absolute bottom-0 left-0 right-0 text-center pb-3">
           <span className="font-sans text-[11px] text-white/30 tracking-widest uppercase">
-            RCTNE · Aagaz &#x2019;26–27
+            {img.category} · RCTNE
           </span>
         </div>
       </motion.div>
@@ -141,7 +134,7 @@ function GridTile({
   onOpen,
   index,
 }: {
-  img: (typeof images)[number];
+  img: (typeof galleryItems)[number];
   onOpen: () => void;
   index: number;
 }) {
@@ -173,11 +166,6 @@ function GridTile({
           <ZoomIn size={14} className="text-white" />
           <span className="font-sans text-xs text-white/80 uppercase tracking-wider">View</span>
         </div>
-      </div>
-
-      {/* Top-right index */}
-      <div className="absolute top-3 right-3 font-heading font-bold text-[10px] text-white/0 group-hover:text-white/60 tabular-nums transition-colors duration-200">
-        {String(img.id).padStart(2, "0")}
       </div>
     </motion.button>
   );
@@ -251,13 +239,14 @@ function MorePhotosTile({
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function GalleryPage() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const TOTAL = galleryItems.length;
 
   const openLightbox = useCallback((index: number) => setLightboxIndex(index), []);
   const closeLightbox = useCallback(() => setLightboxIndex(null), []);
   const goPrev = useCallback(() =>
-    setLightboxIndex((i) => (i === null ? null : (i - 1 + TOTAL) % TOTAL)), []);
+    setLightboxIndex((i) => (i === null ? null : (i - 1 + TOTAL) % TOTAL)), [TOTAL]);
   const goNext = useCallback(() =>
-    setLightboxIndex((i) => (i === null ? null : (i + 1) % TOTAL)), []);
+    setLightboxIndex((i) => (i === null ? null : (i + 1) % TOTAL)), [TOTAL]);
 
   // Prevent body scroll when lightbox is open
   useEffect(() => {
@@ -271,7 +260,6 @@ export default function GalleryPage() {
 
   return (
     <main className="min-h-screen bg-background">
-
       {/* ── Header ── */}
       <div className="max-w-6xl mx-auto px-6 md:px-12 pt-28 pb-12">
         <BlurFade delay={0.05} inView>
@@ -313,7 +301,7 @@ export default function GalleryPage() {
       {/* ── Continuous Magic UI Marquee ── */}
       <div className="mb-16">
         <Marquee pauseOnHover className="[--duration:80s] [--gap:1.25rem] py-2">
-          {images.map((img, i) => (
+          {galleryItems.map((img, i) => (
             <button
               key={img.id}
               onClick={() => openLightbox(i)}
@@ -339,36 +327,56 @@ export default function GalleryPage() {
         </Marquee>
       </div>
 
-      {/* ── Section Divider ── */}
-      <div className="max-w-6xl mx-auto px-6 md:px-12 mb-10">
-        <div className="flex items-center gap-4">
-          <div className="h-px flex-1 bg-border/50" />
-          <span className="font-sans text-xs text-text-muted/50 uppercase tracking-widest">
-            Featured Highlights
-          </span>
-          <div className="h-px flex-1 bg-border/50" />
-        </div>
-      </div>
-
-      {/* ── 8-Tile Photo Grid (7 photos + 1 Quadrant Plus tile) ── */}
+      {/* ── Categorized Photo Grids ── */}
       <div className="max-w-6xl mx-auto px-6 md:px-12 pb-28">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
-          {gridImages.map((img, i) => (
-            <GridTile
-              key={img.id}
-              img={img}
-              onOpen={() => openLightbox(i)}
-              index={i}
-            />
-          ))}
+        {galleryCategories.map((category) => {
+          const catImages = galleryItems.filter((img) => img.category === category);
+          if (catImages.length === 0) return null;
 
-          {/* 8th tile: Plus sign + quadrant indicating remaining photos */}
-          <MorePhotosTile
-            remainingCount={remainingCount}
-            onClick={() => openLightbox(GRID_DISPLAY_COUNT)}
-            index={GRID_DISPLAY_COUNT}
-          />
-        </div>
+          const gridImages = catImages.slice(0, GRID_DISPLAY_COUNT);
+          const remainingCount = catImages.length - GRID_DISPLAY_COUNT;
+
+          return (
+            <div key={category} className="mb-16 last:mb-0">
+              {/* Category Divider */}
+              <div className="flex items-center gap-4 mb-8">
+                <h2 className="font-heading font-bold text-2xl text-text whitespace-nowrap">
+                  {category}
+                </h2>
+                <div className="h-px flex-1 bg-border/50" />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+                {gridImages.map((img, indexInCat) => {
+                  const globalIndex = galleryItems.findIndex((g) => g.id === img.id);
+                  return (
+                    <GridTile
+                      key={img.id}
+                      img={img}
+                      onOpen={() => openLightbox(globalIndex)}
+                      index={indexInCat}
+                    />
+                  );
+                })}
+
+                {/* 8th tile: Plus sign + quadrant indicating remaining photos for this category */}
+                {remainingCount > 0 && (
+                  <MorePhotosTile
+                    remainingCount={remainingCount}
+                    onClick={() => {
+                      const eighthImage = catImages[GRID_DISPLAY_COUNT];
+                      const globalEighthIndex = galleryItems.findIndex(
+                        (g) => g.id === eighthImage.id
+                      );
+                      openLightbox(globalEighthIndex);
+                    }}
+                    index={GRID_DISPLAY_COUNT}
+                  />
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* ── Lightbox ── */}
@@ -379,10 +387,10 @@ export default function GalleryPage() {
             onClose={closeLightbox}
             onPrev={goPrev}
             onNext={goNext}
+            images={galleryItems}
           />
         )}
       </AnimatePresence>
-
     </main>
   );
 }
