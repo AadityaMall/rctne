@@ -6,8 +6,7 @@ export const contact: ContactContent = {
   location: "Thane, Maharashtra, India",
   socials: [
     { platform: "Instagram", url: "https://www.instagram.com/rc_thanenorthend/", handle: "@rc_thanenorthend" },
-    { platform: "Facebook", url: "#", handle: "RCTNE" },
-    { platform: "LinkedIn", url: "#", handle: "RCTNE" },
+    { platform: "LinkedIn", url: "https://www.linkedin.com/company/rctne/", handle: "rctne" },
   ],
 }
 

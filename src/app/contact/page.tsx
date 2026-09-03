@@ -3,6 +3,7 @@ import { BlurFade } from "@/components/ui/blur-fade";
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 import { Mail, Phone, MapPin, ArrowLeft, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import { SOCIAL_CONFIG } from "@/components/shared/SocialIcons";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -131,23 +132,28 @@ export default async function ContactPage() {
                 <div>
                   <p className="font-sans text-xs font-semibold uppercase tracking-widest text-text-muted mb-4">Social Media</p>
                   <div className="flex flex-col gap-3">
-                    {contact.socials.map((social) => (
-                      <a
-                        key={social.platform}
-                        href={social.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-3 font-sans text-sm text-text-muted hover:text-accent transition-colors group w-fit"
-                      >
-                        <span className="w-9 h-9 rounded-full border border-border/50 flex items-center justify-center group-hover:border-accent/40 group-hover:bg-accent/8 transition-colors">
-                          <ExternalLink size={15} />
-                        </span>
-                        <span>
-                          <span className="font-semibold text-text group-hover:text-accent transition-colors">{social.platform}</span>
-                          <span className="text-text-muted ml-1.5">{social.handle}</span>
-                        </span>
-                      </a>
-                    ))}
+                    {contact.socials.map((social) => {
+                      const cfg = SOCIAL_CONFIG[social.platform];
+                      const Icon = cfg ? cfg.SvgIcon : ExternalLink;
+                      
+                      return (
+                        <a
+                          key={social.platform}
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-3 font-sans text-sm text-text-muted hover:text-accent transition-colors group w-fit"
+                        >
+                          <span className={`w-9 h-9 rounded-full border border-border/50 flex items-center justify-center transition-colors ${cfg ? `${cfg.hoverBg} ${cfg.hoverBorder}` : 'group-hover:border-accent/40 group-hover:bg-accent/8'}`}>
+                            <Icon size={15} className={cfg ? cfg.hoverIcon : ''} />
+                          </span>
+                          <span>
+                            <span className="font-semibold text-text group-hover:text-accent transition-colors">{social.platform}</span>
+                            <span className="text-text-muted ml-1.5">{social.handle}</span>
+                          </span>
+                        </a>
+                      );
+                    })}
                   </div>
                 </div>
 
