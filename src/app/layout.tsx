@@ -40,6 +40,7 @@ export default function RootLayout({
       lang="en"
       className={`${fontInter.variable} ${fontFredoka.variable} antialiased`}
       suppressHydrationWarning
+      data-scroll-behavior="smooth"
     >
       <body className="font-sans overflow-x-hidden">
         <ThemeProvider

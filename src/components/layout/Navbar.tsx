@@ -15,7 +15,6 @@ export function Navbar() {
   const [navLinks, setNavLinks] = useState<NavLink[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeHash, setActiveHash] = useState("");
   const pathname = usePathname();
 
   useEffect(() => {
@@ -23,20 +22,7 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
-
-      // Scroll spy for sections
-      const sections = document.querySelectorAll("section[id]");
-      let current = "";
-      sections.forEach((section) => {
-        const sectionTop = section.offsetTop;
-        if (window.scrollY >= sectionTop - 100) {
-          current = "#" + section.getAttribute("id");
-        }
-      });
-      setActiveHash(current);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 40);
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
@@ -44,33 +30,22 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMobileOpen(false);
   }, [pathname]);
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
-    
-    // Check if the link contains a hash (e.g. /contact#join-us)
-    if (href.includes("#")) {
-      const [path, hash] = href.split("#");
-      // If we are on the page, check the scroll spy activeHash
-      if (pathname === path) {
-        // Default to the first section if activeHash is empty
-        if (!activeHash && href.endsWith("#join-us")) return true;
-        return activeHash === "#" + hash;
-      }
-      return false; // Not on the same page
-    }
-
     return pathname === href || pathname.startsWith(href + "/");
   };
 
   const NavItem = ({ link }: { link: NavLink }) => {
     const active = isActive(link.href);
+    const isExternal = link.href.startsWith("http");
     return (
       <Link
         href={link.href}
+        target={isExternal ? "_blank" : undefined}
+        rel={isExternal ? "noopener noreferrer" : undefined}
         className={cn(
           "relative px-3.5 py-1.5 rounded-full transition-colors duration-200 select-none whitespace-nowrap",
           active ? "text-accent" : "text-text-muted hover:text-text"

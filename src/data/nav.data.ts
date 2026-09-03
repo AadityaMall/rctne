@@ -7,6 +7,6 @@ export const navLinks: NavLink[] = [
   { label: "Projects", href: "/projects" },
   { label: "Events",  href: "/calendar" },
   { label: "Gallery", href: "/gallery"  },
-  { label: "Join Us", href: "/contact#join-us"  },
-  { label: "Contact", href: "/contact#contact-section"  },
+  { label: "Join Us", href: "https://forms.gle/placeholder-link"  },
+  { label: "Contact", href: "/contact"  },
 ]
