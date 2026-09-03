@@ -23,12 +23,12 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
@@ -36,6 +36,31 @@ export function Navbar() {
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(href + "/");
+  };
+
+  const NavItem = ({ link }: { link: NavLink }) => {
+    const active = isActive(link.href);
+    const isExternal = link.href.startsWith("http");
+    return (
+      <Link
+        href={link.href}
+        target={isExternal ? "_blank" : undefined}
+        rel={isExternal ? "noopener noreferrer" : undefined}
+        className={cn(
+          "relative px-3.5 py-1.5 rounded-full transition-colors duration-200 select-none whitespace-nowrap",
+          active ? "text-accent" : "text-text-muted hover:text-text"
+        )}
+      >
+        {active && (
+          <motion.span
+            layoutId="nav-pill"
+            className="absolute inset-0 rounded-full bg-accent/10 border border-accent/25"
+            transition={{ type: "spring", stiffness: 380, damping: 32 }}
+          />
+        )}
+        <span className="relative z-10">{link.label}</span>
+      </Link>
+    );
   };
 
   return (
@@ -46,60 +71,14 @@ export function Navbar() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           className={cn(
-            "pointer-events-auto flex items-center justify-between rounded-full px-5 py-2.5 w-full max-w-5xl transition-all duration-500 ease-out",
+            "pointer-events-auto relative flex items-center rounded-full px-5 py-3 w-full max-w-6xl transition-all duration-500 ease-out",
             scrolled
               ? "bg-background/90 backdrop-blur-2xl border border-border/70 shadow-[0_4px_30px_oklch(57%_0.16_45_/_0.07)]"
               : "bg-background/80 backdrop-blur-md border border-border/50 shadow-[0_2px_12px_oklch(22%_0.02_50_/_0.06)]"
           )}
         >
-          <Link href="/" className="flex items-center shrink-0" aria-label="Rotaract Club of Thane North End — Home">
-            {/* Light mode: dark logo — natural aspect ratio, just fixed height */}
-            <Image
-              src="/images/theme/logo-black-cropped.png"
-              alt="Rotaract Club of Thane North End"
-              width={1211}
-              height={277}
-              loading="lazy"
-              className="h-11 w-auto dark:hidden"
-            />
-            {/* Dark mode: white logo */}
-            <Image
-              src="/images/theme/logo-white-cropped.png"
-              alt="Rotaract Club of Thane North End"
-              width={1211}
-              height={277}
-              loading="lazy"
-              className="h-11 w-auto hidden dark:block"
-            />
-          </Link>
-
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-0.5 font-sans text-sm font-medium">
-            {navLinks.map((link) => {
-              const active = isActive(link.href);
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={cn(
-                    "relative px-3.5 py-1.5 rounded-full transition-colors duration-200 select-none",
-                    active ? "text-accent" : "text-text-muted hover:text-text"
-                  )}
-                >
-                  {active && (
-                    <motion.span
-                      layoutId="nav-pill"
-                      className="absolute inset-0 rounded-full bg-accent/10 border border-accent/25"
-                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                    />
-                  )}
-                  <span className="relative z-10">{link.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-
-          <div className="flex items-center gap-2">
+          {/* ── LEFT: Theme toggle + mobile menu ── */}
+          <div className="flex items-center gap-1 shrink-0">
             <ThemeToggle />
             <button
               onClick={() => setMobileOpen((p) => !p)}
@@ -120,10 +99,41 @@ export function Navbar() {
               </AnimatePresence>
             </button>
           </div>
+
+          {/* ── CENTER: Truly centered nav links via absolute positioning ── */}
+          <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-0.5 font-sans text-sm font-medium">
+            {navLinks.map((link) => (
+              <NavItem key={link.label} link={link} />
+            ))}
+          </nav>
+
+          {/* ── RIGHT: Logo pushed to far right ── */}
+          <Link
+            href="/"
+            className="flex items-center shrink-0 ml-auto"
+            aria-label="Rotaract Club of Thane North End — Home"
+          >
+            <Image
+              src="/images/theme/logo-black-cropped.png"
+              alt="Rotaract Club of Thane North End"
+              width={1211}
+              height={277}
+              className="h-10 w-auto dark:hidden"
+              priority
+            />
+            <Image
+              src="/images/theme/logo-white-cropped.png"
+              alt="Rotaract Club of Thane North End"
+              width={1211}
+              height={277}
+              className="h-10 w-auto hidden dark:block"
+              priority
+            />
+          </Link>
         </motion.div>
       </header>
 
-      {/* Mobile drawer */}
+      {/* ── MOBILE DRAWER ── */}
       <AnimatePresence>
         {mobileOpen && (
           <>
@@ -166,7 +176,7 @@ export function Navbar() {
                 {navLinks.map((link, i) => {
                   const active = isActive(link.href);
                   return (
-                    <motion.div key={link.href} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 + i * 0.04 }}>
+                    <motion.div key={link.label} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 + i * 0.04 }}>
                       <Link
                         href={link.href}
                         onClick={() => setMobileOpen(false)}

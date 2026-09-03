@@ -18,29 +18,27 @@ export function SectionHeader({
   return (
     <div
       className={cn(
-        "flex flex-col md:flex-row gap-4 md:gap-12 md:items-end",
-        align === "center" && "md:items-center md:flex-col md:text-center",
+        "flex flex-col gap-2",
+        align === "center" && "items-center text-center",
         className
       )}
     >
-      <div className="flex flex-col gap-1 md:shrink-0">
-        <span className="font-heading font-bold text-lg text-accent tracking-wide">
-          ({number})
-        </span>
-        <h2
-          className={cn(
-            "font-heading font-bold text-4xl md:text-5xl lg:text-6xl text-text tracking-tight leading-[1.05]",
-            align === "center" && "md:text-center"
-          )}
-        >
-          {title}
-        </h2>
-      </div>
+      <span className="font-heading font-bold text-5xl text-accent/20 block leading-none">
+        {number}
+      </span>
+      <h2
+        className={cn(
+          "font-heading font-bold text-4xl md:text-5xl lg:text-6xl text-text tracking-tight leading-[1.05]",
+          align === "center" && "text-center"
+        )}
+      >
+        {title}
+      </h2>
 
       {subtitle && (
         <p
           className={cn(
-            "font-sans text-base md:text-lg text-text-muted max-w-sm leading-relaxed pb-1",
+            "font-sans text-base md:text-lg text-text-muted max-w-sm leading-relaxed mt-1",
             align === "center" && "md:max-w-md"
           )}
         >

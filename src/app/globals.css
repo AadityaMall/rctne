@@ -165,3 +165,12 @@ html {
 .float-slow-offset {
   animation: float-slow 4s ease-in-out infinite 1s;
 }
+
+/* ─── Scrollbar utilities ─── */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE/Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;             /* Chrome/Safari */
+}

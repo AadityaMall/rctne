@@ -34,7 +34,13 @@ export interface AboutPageContent {
   vision: string
   history: string
   pillars: string[]
+  values: ValueItem[]
   awards: AwardItem[]
+}
+
+export interface ValueItem {
+  label: string
+  description: string
 }
 
 export interface AwardItem {
@@ -52,6 +58,9 @@ export interface Project {
   category: string
   image: string
   detail: string
+  location?: string
+  why?: string
+  impact?: string
   instagramUrl?: string
 }
 
@@ -76,6 +85,9 @@ export interface CalendarEvent {
   location: string
   type: string
   status?: "upcoming" | "past"
+  description?: string
+  registrationUrl?: string
+  highlights?: string
 }
 
 // Stats / Impact
@@ -94,6 +106,8 @@ export interface MoreAboutContent {
 // Contact
 export interface ContactContent {
   email: string
+  phone: string
+  location: string
   socials: SocialLink[]
 }
 
@@ -110,6 +124,7 @@ export interface TeamMember {
   id: string
   name: string
   role: string
+  tagline?: string
   image?: string
   tier: TeamTier
   initials: string
@@ -121,4 +136,22 @@ export interface TeamTierGroup {
   title: string
   subtitle: string
   members: TeamMember[]
+}
+
+// Gallery
+export type GalleryCategory =
+  | "Events"
+  | "Community Service"
+  | "Leadership"
+  | "Team"
+  | "Social Activities"
+  | "Special Moments"
+
+export interface GalleryItem {
+  id: string
+  src: string
+  alt: string
+  category: GalleryCategory
+  /** Optional short caption shown on hover */
+  caption?: string
 }

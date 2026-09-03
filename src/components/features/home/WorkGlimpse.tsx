@@ -135,7 +135,7 @@ export function WorkGlimpse() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-5">
           <BlurFade delay={0.1} inView>
             <div>
-              <span className="font-heading text-base text-accent font-bold tracking-wide">(02)</span>
+              <span className="font-heading font-bold text-5xl text-accent/20 block leading-none">04</span>
               <h2 className="font-heading font-bold text-4xl md:text-5xl text-text tracking-tight mt-1 leading-[1.05]">
                 Selected Work
               </h2>

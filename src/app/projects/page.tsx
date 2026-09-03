@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ArrowLeft, ArrowDown, X, Play } from "lucide-react";
+import { ArrowLeft, ArrowDown, X, Play, MapPin } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { contentService } from "@/services/content.service";
@@ -97,12 +97,12 @@ function FullProjectCard({
       {/* Main content grid */}
       <div
         className={cn(
-          "relative z-10 h-full max-w-5xl mx-auto px-6 md:px-12 grid gap-6 md:gap-12 items-center pt-[7vh] md:grid-cols-2",
+          "relative z-10 h-full max-w-5xl mx-auto px-6 md:px-12 grid gap-6 md:gap-12 items-start pt-[7vh] md:grid-cols-2",
           flip && "md:[direction:rtl]"
         )}
       >
         {/* Text side */}
-        <div className={cn("flex flex-col gap-4 py-6", flip && "md:[direction:ltr]")}>
+        <div className={cn("flex flex-col gap-3 py-6 overflow-y-auto h-full scrollbar-hide", flip && "md:[direction:ltr]")}>
           <div className="flex items-start gap-3">
             <span className="font-heading font-bold text-[4rem] leading-[0.85] text-text/[0.5] select-none tabular-nums shrink-0">
               {String(index + 1).padStart(2, "0")}
@@ -122,12 +122,33 @@ function FullProjectCard({
             {project.title}
           </h2>
 
+          {project.location && (
+            <p className="flex items-center gap-1.5 font-sans text-xs text-text-muted">
+              <MapPin size={11} style={{ color }} />
+              {project.location}
+            </p>
+          )}
+
           <p className="font-sans text-sm md:text-base text-text-muted leading-relaxed max-w-[38ch]">
             {project.detail}
           </p>
 
-          {/* Month + season tag — replaces the old year + status row */}
-          <div className="flex items-center gap-3 pt-2">
+          {project.why && (
+            <div className="flex flex-col gap-0.5">
+              <span className="font-sans text-[10px] font-bold uppercase tracking-widest" style={{ color }}>Why</span>
+              <p className="font-sans text-xs text-text-muted leading-relaxed max-w-[38ch]">{project.why}</p>
+            </div>
+          )}
+
+          {project.impact && (
+            <div className="flex flex-col gap-0.5">
+              <span className="font-sans text-[10px] font-bold uppercase tracking-widest" style={{ color }}>Impact</span>
+              <p className="font-sans text-xs text-text-muted leading-relaxed max-w-[38ch]">{project.impact}</p>
+            </div>
+          )}
+
+          {/* Month + season tag */}
+          <div className="flex items-center gap-3 pt-1">
             <span
               className="font-heading font-bold text-sm tabular-nums px-2.5 py-1 rounded-full"
               style={{ backgroundColor: `${color}18`, color }}

@@ -120,6 +120,11 @@ function MemberCard({
             {member.role}
           </p>
         )}
+        {!isCompact && member.tagline && (
+          <p className="font-sans text-[0.72rem] text-text-muted leading-snug mt-1.5 italic">
+            &ldquo;{member.tagline}&rdquo;
+          </p>
+        )}
       </div>
     </motion.div>
   );

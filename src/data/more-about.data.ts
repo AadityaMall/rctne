@@ -1,7 +1,7 @@
 import type { MoreAboutContent } from "@/types/content.types"
 
 export const moreAbout: MoreAboutContent = {
-  number: "04",
+  number: "03",
   title: "Our Impact",
   body: "Since our founding, every project has been guided by one simple idea — real change happens one person at a time. Here's what we've built together.",
   stats: [

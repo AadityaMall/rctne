@@ -18,6 +18,14 @@ export const aboutPage: AboutPageContent = {
     "Club Service",
     "Youth Service",
   ],
+  values: [
+    { label: "Leadership", description: "We develop young people who step up, take ownership, and inspire those around them." },
+    { label: "Service", description: "Every action we take is rooted in a genuine commitment to serving our community." },
+    { label: "Inclusion", description: "We welcome everyone — because diverse voices build stronger communities." },
+    { label: "Friendship", description: "The bonds we form here last long beyond our year of service." },
+    { label: "Innovation", description: "We challenge ourselves to find creative, lasting solutions to real problems." },
+    { label: "Integrity", description: "We act with honesty and accountability in everything we do." },
+  ],
   awards: [
     { title: "Best Club Award — Community Service", year: "2023", issuer: "Rotaract District 3142" },
     { title: "Outstanding Youth Leadership Award", year: "2022", issuer: "Rotary Club of Thane North End" },

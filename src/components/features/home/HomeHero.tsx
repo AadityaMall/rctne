@@ -149,20 +149,20 @@ export function HomeHero() {
             <BlurFade delay={0.54} inView>
               <div className="flex flex-wrap items-center gap-4">
                 <motion.a
-                  href="/projects"
+                  href="/contact"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="inline-flex items-center gap-2 bg-accent text-background font-heading font-bold px-7 py-3.5 rounded-full text-sm tracking-wide hover:bg-accent/90 transition-colors"
                 >
-                  Our Projects
+                  Join Us
                   <ArrowRight size={14} aria-hidden />
                 </motion.a>
                 <motion.a
-                  href="/about"
+                  href="/projects"
                   whileHover={{ x: 3 }}
                   className="font-sans text-sm text-text-muted hover:text-accent transition-colors flex items-center gap-1.5"
                 >
-                  Learn about us
+                  Explore our projects
                   <ArrowRight size={13} aria-hidden />
                 </motion.a>
               </div>
