@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { ArrowRight, Share2 } from "lucide-react";
+import { siteConfig } from "@/data/site-config.data";
 
 export function ClosingCTA() {
   return (
@@ -44,13 +45,15 @@ export function ClosingCTA() {
                 </p>
                 <div className="flex flex-wrap items-center gap-4">
                   <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                    <Link
-                      href="/contact"
+                    <a
+                      href={siteConfig.joinFormUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 bg-accent text-background font-heading font-bold px-8 py-3.5 rounded-full text-sm tracking-wide hover:bg-accent/90 transition-colors"
                     >
                       Join Our Organisation
                       <ArrowRight size={14} aria-hidden />
-                    </Link>
+                    </a>
                   </motion.div>
                   <motion.div whileHover={{ x: 3 }}>
                     <Link

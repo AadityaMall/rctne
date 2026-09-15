@@ -8,6 +8,7 @@ import { contentService } from "@/services/content.service";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/data/site-config.data";
 import type { HeroContent } from "@/types/content.types";
 
 const ACTION_WORDS = ["Serve.", "Lead.", "Build.", "Connect.", "Change."];
@@ -149,7 +150,9 @@ export function HomeHero() {
             <BlurFade delay={0.54} inView>
               <div className="flex flex-wrap items-center gap-4">
                 <motion.a
-                  href="/contact"
+                  href={siteConfig.joinFormUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                   className="inline-flex items-center gap-2 bg-accent text-background font-heading font-bold px-7 py-3.5 rounded-full text-sm tracking-wide hover:bg-accent/90 transition-colors"

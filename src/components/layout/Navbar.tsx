@@ -11,6 +11,52 @@ import { cn } from "@/lib/utils";
 import { ThemeToggle } from "./ThemeToggle";
 import type { NavLink } from "@/types/content.types";
 
+interface NavItemProps {
+  link: NavLink;
+  active: boolean;
+}
+
+function NavItem({ link, active }: NavItemProps) {
+  const isExternal = link.href.startsWith("http");
+
+  if (link.cta) {
+    return (
+      <Link
+        href={link.href}
+        target={isExternal ? "_blank" : undefined}
+        rel={isExternal ? "noopener noreferrer" : undefined}
+        className="ml-2 relative px-4 py-1.5 rounded-full text-sm font-semibold select-none whitespace-nowrap overflow-hidden group"
+      >
+        <motion.span
+          className="absolute inset-0 rounded-full bg-accent group-hover:opacity-90 transition-opacity duration-200"
+        />
+        <span className="relative z-10 text-white dark:text-background">{link.label}</span>
+      </Link>
+    );
+  }
+
+  return (
+    <Link
+      href={link.href}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
+      className={cn(
+        "relative px-3.5 py-1.5 rounded-full transition-colors duration-200 select-none whitespace-nowrap",
+        active ? "text-accent" : "text-text-muted hover:text-text"
+      )}
+    >
+      {active && (
+        <motion.span
+          layoutId="nav-pill"
+          className="absolute inset-0 rounded-full bg-accent/10 border border-accent/25"
+          transition={{ type: "spring", stiffness: 380, damping: 32 }}
+        />
+      )}
+      <span className="relative z-10">{link.label}</span>
+    </Link>
+  );
+}
+
 export function Navbar() {
   const [navLinks, setNavLinks] = useState<NavLink[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -36,48 +82,6 @@ export function Navbar() {
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
     return pathname === href || pathname.startsWith(href + "/");
-  };
-
-  const NavItem = ({ link }: { link: NavLink }) => {
-    const active = isActive(link.href);
-    const isExternal = link.href.startsWith("http");
-
-    if (link.cta) {
-      return (
-        <Link
-          href={link.href}
-          target={isExternal ? "_blank" : undefined}
-          rel={isExternal ? "noopener noreferrer" : undefined}
-          className="ml-2 relative px-4 py-1.5 rounded-full text-sm font-semibold select-none whitespace-nowrap overflow-hidden group"
-        >
-          <motion.span
-            className="absolute inset-0 rounded-full bg-accent group-hover:opacity-90 transition-opacity duration-200"
-          />
-          <span className="relative z-10 text-white dark:text-background">{link.label}</span>
-        </Link>
-      );
-    }
-
-    return (
-      <Link
-        href={link.href}
-        target={isExternal ? "_blank" : undefined}
-        rel={isExternal ? "noopener noreferrer" : undefined}
-        className={cn(
-          "relative px-3.5 py-1.5 rounded-full transition-colors duration-200 select-none whitespace-nowrap",
-          active ? "text-accent" : "text-text-muted hover:text-text"
-        )}
-      >
-        {active && (
-          <motion.span
-            layoutId="nav-pill"
-            className="absolute inset-0 rounded-full bg-accent/10 border border-accent/25"
-            transition={{ type: "spring", stiffness: 380, damping: 32 }}
-          />
-        )}
-        <span className="relative z-10">{link.label}</span>
-      </Link>
-    );
   };
 
   return (
@@ -120,7 +124,7 @@ export function Navbar() {
           {/* ── CENTER: Truly centered nav links via absolute positioning ── */}
           <nav className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-0.5 font-sans text-sm font-medium">
             {navLinks.map((link) => (
-              <NavItem key={link.label} link={link} />
+              <NavItem key={link.label} link={link} active={isActive(link.href)} />
             ))}
           </nav>
 

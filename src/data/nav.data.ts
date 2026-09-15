@@ -1,4 +1,5 @@
 import type { NavLink } from "@/types/content.types"
+import { siteConfig } from "@/data/site-config.data"
 
 export const navLinks: NavLink[] = [
   { label: "Home",     href: "/"         },
@@ -8,6 +9,6 @@ export const navLinks: NavLink[] = [
   { label: "Events",  href: "/calendar" },
   { label: "Gallery", href: "/gallery"  },
   { label: "Contact", href: "/contact"  },
-  { label: "Join Us", href: "https://forms.gle/placeholder-link", cta: true },
+  { label: "Join Us", href: siteConfig.joinFormUrl, cta: true },
 ]
 

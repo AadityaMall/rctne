@@ -1,4 +1,5 @@
 import type { CalendarSection } from "@/types/content.types"
+import { siteConfig } from "@/data/site-config.data"
 
 export const calendar: CalendarSection = {
   number: "05",
@@ -12,7 +13,7 @@ export const calendar: CalendarSection = {
       type: "Environment",
       status: "upcoming",
       description: "Join us for a community-led beach cleanup to restore Kelva Beach. Together we collect waste, raise awareness, and protect the coastline.",
-      registrationUrl: "#",
+      registrationUrl: siteConfig.whatsappChannel,
     },
     {
       id: "4",
@@ -43,3 +44,4 @@ export const calendar: CalendarSection = {
     },
   ],
 }
+

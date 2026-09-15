@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Calendar as CalendarIcon, MapPin, ArrowRight } from "lucide-react";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { contentService } from "@/services/content.service";
+import { siteConfig } from "@/data/site-config.data";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import type { CalendarSection as CalendarData } from "@/types/content.types";
 
@@ -86,10 +87,17 @@ export function CalendarSection() {
                         </div>
                       </div>
                     </div>
-                    <span className="ml-7 md:ml-0 inline-flex items-center gap-1.5 font-sans text-xs font-semibold uppercase tracking-wider px-4 py-2 rounded-full bg-accent/10 text-accent border border-accent/20">
-                      Register Now
+                    <a
+                      href={event.registrationUrl ?? siteConfig.whatsappChannel}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ml-7 md:ml-0 inline-flex items-center gap-1.5 font-sans text-xs font-semibold uppercase tracking-wider px-4 py-2 rounded-full bg-accent/10 text-accent border border-accent/20 hover:bg-accent hover:text-white transition-colors whitespace-nowrap"
+                    >
+                      {(event.registrationUrl ?? siteConfig.whatsappChannel).includes("whatsapp")
+                        ? "Get WhatsApp Updates"
+                        : "Register Now"}
                       <ArrowRight size={11} />
-                    </span>
+                    </a>
                   </motion.li>
                 </BlurFade>
               );

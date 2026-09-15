@@ -2,13 +2,12 @@ import { contentService } from "@/services/content.service";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { NumberTicker } from "@/components/ui/number-ticker";
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
-import { Trophy, Target, Eye, BookOpen, Award, MapPin } from "lucide-react";
+import Link from "next/link";
+import { Trophy, Target, Eye, BookOpen, Award, MapPin, ArrowLeft } from "lucide-react";
+import { siteConfig } from "@/data/site-config.data";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "About Us — RCTNE",
-  description: "Learn about the Rotaract Club of Thane North End — our history, mission, vision, district, and awards.",
-};
+export const metadata: Metadata = siteConfig.pages.about;
 
 export default async function AboutPage() {
   const about = await contentService.getAboutPage();
@@ -18,7 +17,13 @@ export default async function AboutPage() {
 
       {/* ── Page Header ── */}
       <section className="px-6 md:px-16 lg:px-24 py-16 md:py-24 max-w-5xl mx-auto">
-        <BlurFade delay={0.05} inView>
+        <BlurFade delay={0.03} inView>
+          <Link href="/" className="inline-flex items-center gap-2 font-sans text-sm text-text-muted hover:text-accent transition-colors mb-8 w-fit">
+            <ArrowLeft size={14} /> Home
+          </Link>
+        </BlurFade>
+
+        <BlurFade delay={0.08} inView>
           <div className="inline-flex items-center rounded-full border border-accent/30 bg-accent/8 px-4 py-1.5 mb-6">
             <AnimatedShinyText className="font-sans text-xs font-semibold uppercase tracking-[0.22em] text-accent">
               ✦ Our Story

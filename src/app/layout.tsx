@@ -3,8 +3,11 @@ import { Fredoka, Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { WhatsAppFloatingCta } from "@/components/layout/WhatsAppFloatingCta";
 import { MorphingBackground } from "@/components/layout/MorphingBackground";
 import { SmoothScroller } from "@/components/layout/SmoothScroller";
+import { Toaster } from "@/components/ui/sonner";
+import { siteConfig } from "@/data/site-config.data";
 import "./globals.css";
 
 const fontFredoka = Fredoka({
@@ -19,15 +22,10 @@ const fontInter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Rotaract Club of Thane North End — Aagaz",
-  description:
-    "Every beginning holds endless possibilities. Rotaract Club of Thane North End — young leaders building real change in Thane and beyond.",
-  keywords: ["Rotaract", "Thane", "Community Service", "Youth Leadership", "RCTNE"],
-  openGraph: {
-    title: "Rotaract Club of Thane North End",
-    description: "Young leaders. Real impact.",
-    type: "website",
-  },
+  title: siteConfig.metadata.title,
+  description: siteConfig.metadata.description,
+  keywords: siteConfig.metadata.keywords,
+  openGraph: siteConfig.metadata.openGraph,
 };
 
 export default function RootLayout({
@@ -56,6 +54,8 @@ export default function RootLayout({
               {children}
             </div>
             <Footer />
+            <WhatsAppFloatingCta />
+            <Toaster position="bottom-right" richColors />
           </SmoothScroller>
         </ThemeProvider>
       </body>

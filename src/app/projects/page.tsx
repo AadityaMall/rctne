@@ -8,6 +8,7 @@ import { ArrowLeft, ArrowDown, X, Play, MapPin } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { contentService } from "@/services/content.service";
+import { siteConfig } from "@/data/site-config.data";
 import { BlurFade } from "@/components/ui/blur-fade";
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 import { BorderBeam } from "@/components/ui/border-beam";
@@ -147,8 +148,8 @@ function FullProjectCard({
             </div>
           )}
 
-          {/* Month + season tag */}
-          <div className="flex items-center gap-3 pt-1">
+          {/* Month + season tag + CTA */}
+          <div className="flex flex-wrap items-center gap-3 pt-1">
             <span
               className="font-heading font-bold text-sm tabular-nums px-2.5 py-1 rounded-full"
               style={{ backgroundColor: `${color}18`, color }}
@@ -156,9 +157,15 @@ function FullProjectCard({
               {project.month}
             </span>
             <span className="w-1 h-1 rounded-full bg-border/60" />
-            <span className="font-sans text-xs text-text-muted/50 tracking-wide">
-              RCTNE × Aagaz &apos;26–27
-            </span>
+            <a
+              href={siteConfig.whatsappChannel}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 font-sans text-xs font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full transition-all hover:scale-105"
+              style={{ backgroundColor: `${color}20`, color }}
+            >
+              Join Next Drive →
+            </a>
           </div>
         </div>
 

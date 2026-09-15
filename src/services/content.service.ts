@@ -1,4 +1,5 @@
 import { navLinks } from "@/data/nav.data"
+import { siteConfig } from "@/data/site-config.data"
 import { hero } from "@/data/hero.data"
 import { partners } from "@/data/partners.data"
 import { about } from "@/data/about.data"
@@ -24,6 +25,7 @@ import type {
   TeamTierGroup,
   GalleryItem,
 } from "@/types/content.types"
+import type { SiteConfig, PageMeta } from "@/types/site-config.types"
 
 export const contentService = {
   getNavLinks: (): Promise<NavLink[]> => Promise.resolve(navLinks),
@@ -39,4 +41,7 @@ export const contentService = {
   getClosingStatement: (): Promise<string> => Promise.resolve(closing.statement),
   getTeamTiers: (): Promise<TeamTierGroup[]> => Promise.resolve(teamTiers),
   getGallery: (): Promise<GalleryItem[]> => Promise.resolve(galleryItems),
+  getSiteConfig: (): Promise<SiteConfig> => Promise.resolve(siteConfig),
+  getPageMeta: (page: keyof SiteConfig["pages"]): Promise<PageMeta> =>
+    Promise.resolve(siteConfig.pages[page]),
 }

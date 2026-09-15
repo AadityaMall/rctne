@@ -82,6 +82,7 @@ export function Footer() {
               alt="Rotaract Club of Thane North End" 
               width={1211} 
               height={277} 
+              loading="eager"
               className="h-[68px] sm:h-[100px] md:h-[170px] w-auto max-w-full object-contain dark:hidden" 
             />
             <Image 
@@ -89,6 +90,7 @@ export function Footer() {
               alt="Rotaract Club of Thane North End" 
               width={1211} 
               height={277} 
+              loading="eager"
               className="h-[68px] sm:h-[100px] md:h-[170px] w-auto max-w-full object-contain hidden dark:block" 
             />
           </Link>
@@ -153,7 +155,7 @@ export function Footer() {
                   { href: "/team",     label: "Team"     },
                   { href: "/projects", label: "Projects" },
                   { href: "/gallery",  label: "Gallery"  },
-                  { href: "/contact",  label: "Join Us"  },
+                  { href: "/calendar", label: "Events"   },
                   { href: "/contact",  label: "Contact"  },
                 ] as const
               ).map(({ href, label }) => (
@@ -181,12 +183,6 @@ export function Footer() {
                 {socials[0].handle}
               </p>
             )}
-            <a
-              href="mailto:hello@rctne.org"
-              className="font-sans text-xs text-text-muted hover:text-accent transition-colors mt-1"
-            >
-              hello@rctne.org
-            </a>
           </div>
         </div>
 

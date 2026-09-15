@@ -3,12 +3,10 @@ import { BlurFade } from "@/components/ui/blur-fade";
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 import { Calendar, MapPin, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { siteConfig } from "@/data/site-config.data";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Calendar — RCTNE",
-  description: "Upcoming and past events by the Rotaract Club of Thane North End.",
-};
+export const metadata: Metadata = siteConfig.pages.calendar;
 
 const TYPE_DOT: Record<string, string> = {
   Environment: "oklch(55% 0.14 148)",
@@ -92,13 +90,17 @@ export default async function CalendarPage() {
                         {event.type}
                       </span>
                       {event.registrationUrl && (
-                        <Link
+                        <a
                           href={event.registrationUrl}
-                          className="inline-flex items-center gap-1.5 font-sans text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full transition-colors"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 font-sans text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full transition-colors whitespace-nowrap"
                           style={{ backgroundColor: "oklch(62% 0.17 40 / 0.12)", color: "oklch(62% 0.17 40)" }}
                         >
-                          Register →
-                        </Link>
+                          {event.registrationUrl.includes("whatsapp")
+                            ? "Get WhatsApp Updates →"
+                            : "Register Now →"}
+                        </a>
                       )}
                     </div>
                   </li>
