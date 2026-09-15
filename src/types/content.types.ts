@@ -2,6 +2,7 @@
 export interface NavLink {
   label: string
   href: string
+  cta?: boolean
 }
 
 // Marquee

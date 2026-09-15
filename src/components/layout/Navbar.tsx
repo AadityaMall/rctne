@@ -41,6 +41,23 @@ export function Navbar() {
   const NavItem = ({ link }: { link: NavLink }) => {
     const active = isActive(link.href);
     const isExternal = link.href.startsWith("http");
+
+    if (link.cta) {
+      return (
+        <Link
+          href={link.href}
+          target={isExternal ? "_blank" : undefined}
+          rel={isExternal ? "noopener noreferrer" : undefined}
+          className="ml-2 relative px-4 py-1.5 rounded-full text-sm font-semibold select-none whitespace-nowrap overflow-hidden group"
+        >
+          <motion.span
+            className="absolute inset-0 rounded-full bg-accent group-hover:opacity-90 transition-opacity duration-200"
+          />
+          <span className="relative z-10 text-white dark:text-background">{link.label}</span>
+        </Link>
+      );
+    }
+
     return (
       <Link
         href={link.href}
@@ -175,14 +192,21 @@ export function Navbar() {
               <div className="flex flex-col gap-1">
                 {navLinks.map((link, i) => {
                   const active = isActive(link.href);
+                  const isExternal = link.href.startsWith("http");
                   return (
                     <motion.div key={link.label} initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 + i * 0.04 }}>
                       <Link
                         href={link.href}
+                        target={isExternal ? "_blank" : undefined}
+                        rel={isExternal ? "noopener noreferrer" : undefined}
                         onClick={() => setMobileOpen(false)}
                         className={cn(
                           "block text-xl font-heading font-semibold py-2.5 px-4 rounded-xl transition-colors",
-                          active ? "text-accent bg-accent/8" : "text-text hover:text-accent hover:bg-surface"
+                          link.cta
+                            ? "text-accent bg-accent/10 border border-accent/30 hover:bg-accent/18 hover:border-accent/50 mt-2"
+                            : active
+                              ? "text-accent bg-accent/8"
+                              : "text-text hover:text-accent hover:bg-surface"
                         )}
                       >
                         {link.label}
