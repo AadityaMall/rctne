@@ -1,13 +1,34 @@
 import { contentService } from "@/services/content.service";
 import { BlurFade } from "@/components/ui/blur-fade";
-import { NumberTicker } from "@/components/ui/number-ticker";
 import { AnimatedShinyText } from "@/components/ui/animated-shiny-text";
 import Link from "next/link";
 import { Trophy, Target, Eye, BookOpen, Award, MapPin, ArrowLeft } from "lucide-react";
 import { siteConfig } from "@/data/site-config.data";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = siteConfig.pages.about;
+export const metadata: Metadata = {
+  title: siteConfig.pages.about.title,
+  description: siteConfig.pages.about.description,
+  keywords: siteConfig.pages.about.keywords,
+  alternates: {
+    canonical: `${siteConfig.siteUrl}${siteConfig.pages.about.path}`,
+  },
+  openGraph: {
+    title: siteConfig.pages.about.title,
+    description: siteConfig.pages.about.description,
+    url: `${siteConfig.siteUrl}${siteConfig.pages.about.path}`,
+    siteName: siteConfig.siteName,
+    locale: siteConfig.locale,
+    type: "website",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: siteConfig.pages.about.title }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.pages.about.title,
+    description: siteConfig.pages.about.description,
+    images: ["/opengraph-image"],
+  },
+};
 
 export default async function AboutPage() {
   const about = await contentService.getAboutPage();

@@ -14,6 +14,10 @@ export interface SiteMetadata {
 export interface PageMeta {
   title: string
   description: string
+  /** Route path, e.g. "/about" — used to build canonical URLs and the sitemap */
+  path: string
+  /** Per-page targeted SEO keywords */
+  keywords: string[]
 }
 
 export interface ContactFormConfig {
@@ -25,11 +29,39 @@ export interface ContactFormConfig {
   subjectPrefix: string
 }
 
+/** Verification codes for search engine / webmaster tools */
+export interface SiteVerification {
+  /** content value of the google-site-verification meta tag */
+  google?: string
+}
+
+/** Feeds the sitewide Organization JSON-LD structured data block */
+export interface OrganizationInfo {
+  legalName: string
+  foundingYear: string
+  addressLocality: string
+  addressRegion: string
+  addressCountry: string
+  /** Path to the org logo, relative to /public */
+  logo: string
+  /** Social profile URLs referenced as sameAs in structured data */
+  sameAs: string[]
+}
+
 export interface SiteConfig {
+  /** Canonical base URL of the site — change this single value when the domain changes */
+  siteUrl: string
+  /** Short brand name (OpenGraph site_name, manifest short_name) */
+  siteName: string
+  /** BCP 47 locale, e.g. "en_IN" */
+  locale: string
+  /** Hex theme color for browser UI / manifest */
+  themeColor: string
   /** Global site metadata (used in root layout) */
   metadata: SiteMetadata
   /** Per-page metadata overrides */
   pages: {
+    home: PageMeta
     about: PageMeta
     contact: PageMeta
     calendar: PageMeta
@@ -43,4 +75,8 @@ export interface SiteConfig {
   whatsappChannel: string
   /** Google Form URL for membership applications */
   joinFormUrl: string
+  /** Search engine / webmaster verification codes */
+  verification: SiteVerification
+  /** Organization details for structured data (JSON-LD) */
+  organization: OrganizationInfo
 }

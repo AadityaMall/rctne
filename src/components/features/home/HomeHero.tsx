@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ChevronDown } from "lucide-react";
@@ -123,23 +123,25 @@ export function HomeHero() {
               </div>
             </BlurFade>
 
-            <div className="flex flex-col gap-0.5">
-              <BlurFade delay={0.15} inView>
-                <h1 className="font-heading font-bold text-[clamp(2.4rem,4.8vw,4.5rem)] text-text leading-[1.05] tracking-tight">
-                  Every beginning
-                </h1>
-              </BlurFade>
-              <BlurFade delay={0.22} inView>
-                <h1 className="font-heading font-bold text-[clamp(2.4rem,4.8vw,4.5rem)] text-text leading-[1.05] tracking-tight">
-                  holds a chance to
-                </h1>
-              </BlurFade>
-              <BlurFade delay={0.3} inView>
-                <h1 className="font-heading font-bold text-[clamp(2.4rem,4.8vw,4.5rem)] leading-[1.05] tracking-tight">
-                  <CyclingWord />
-                </h1>
-              </BlurFade>
-            </div>
+            <h1 className="contents">
+              <div className="flex flex-col gap-0.5">
+                <BlurFade delay={0.15} inView>
+                  <div className="font-heading font-bold text-[clamp(2.4rem,4.8vw,4.5rem)] text-text leading-[1.05] tracking-tight">
+                    Every beginning
+                  </div>
+                </BlurFade>
+                <BlurFade delay={0.22} inView>
+                  <div className="font-heading font-bold text-[clamp(2.4rem,4.8vw,4.5rem)] text-text leading-[1.05] tracking-tight">
+                    holds a chance to
+                  </div>
+                </BlurFade>
+                <BlurFade delay={0.3} inView>
+                  <div className="font-heading font-bold text-[clamp(2.4rem,4.8vw,4.5rem)] leading-[1.05] tracking-tight">
+                    <CyclingWord />
+                  </div>
+                </BlurFade>
+              </div>
+            </h1>
 
             <BlurFade delay={0.42} inView>
               <p className="font-sans text-base md:text-lg text-text-muted max-w-sm leading-relaxed">

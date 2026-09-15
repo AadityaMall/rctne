@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowRight, ExternalLink, type LucideIcon } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { contentService } from "@/services/content.service";
 import type { SocialLink } from "@/types/content.types";
 

@@ -7,6 +7,32 @@ import { WorkGlimpse } from "@/components/features/home/WorkGlimpse";
 import { CalendarSection } from "@/components/features/home/CalendarSection";
 import { TeamSection } from "@/components/features/home/TeamSection";
 import { ClosingCTA } from "@/components/features/home/ClosingCTA";
+import { siteConfig } from "@/data/site-config.data";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: siteConfig.pages.home.title,
+  description: siteConfig.pages.home.description,
+  keywords: siteConfig.pages.home.keywords,
+  alternates: {
+    canonical: `${siteConfig.siteUrl}${siteConfig.pages.home.path}`,
+  },
+  openGraph: {
+    title: siteConfig.pages.home.title,
+    description: siteConfig.pages.home.description,
+    url: `${siteConfig.siteUrl}${siteConfig.pages.home.path}`,
+    siteName: siteConfig.siteName,
+    locale: siteConfig.locale,
+    type: "website",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: siteConfig.pages.home.title }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.pages.home.title,
+    description: siteConfig.pages.home.description,
+    images: ["/opengraph-image"],
+  },
+};
 
 export default function Home() {
   return (

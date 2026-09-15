@@ -6,7 +6,29 @@ import Link from "next/link";
 import { siteConfig } from "@/data/site-config.data";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = siteConfig.pages.calendar;
+export const metadata: Metadata = {
+  title: siteConfig.pages.calendar.title,
+  description: siteConfig.pages.calendar.description,
+  keywords: siteConfig.pages.calendar.keywords,
+  alternates: {
+    canonical: `${siteConfig.siteUrl}${siteConfig.pages.calendar.path}`,
+  },
+  openGraph: {
+    title: siteConfig.pages.calendar.title,
+    description: siteConfig.pages.calendar.description,
+    url: `${siteConfig.siteUrl}${siteConfig.pages.calendar.path}`,
+    siteName: siteConfig.siteName,
+    locale: siteConfig.locale,
+    type: "website",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: siteConfig.pages.calendar.title }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.pages.calendar.title,
+    description: siteConfig.pages.calendar.description,
+    images: ["/opengraph-image"],
+  },
+};
 
 const TYPE_DOT: Record<string, string> = {
   Environment: "oklch(55% 0.14 148)",
@@ -21,8 +43,42 @@ export default async function CalendarPage() {
   const upcoming = events.filter((e) => e.status !== "past");
   const past = events.filter((e) => e.status === "past");
 
+  // Event rich results are only meaningful for events that haven't happened yet.
+  const eventsJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: upcoming.map((event, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "Event",
+        name: event.name,
+        startDate: new Date(event.date).toISOString(),
+        eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+        eventStatus: "https://schema.org/EventScheduled",
+        location: {
+          "@type": "Place",
+          name: event.location,
+        },
+        description: event.description ?? event.name,
+        url: event.registrationUrl ?? `${siteConfig.siteUrl}${siteConfig.pages.calendar.path}`,
+        organizer: {
+          "@type": "Organization",
+          name: siteConfig.organization.legalName,
+          url: siteConfig.siteUrl,
+        },
+      },
+    })),
+  };
+
   return (
     <main className="min-h-screen bg-background pt-28 pb-32">
+      {upcoming.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(eventsJsonLd) }}
+        />
+      )}
       <div className="max-w-5xl mx-auto px-6 md:px-16">
 
         {/* Back */}

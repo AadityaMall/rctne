@@ -1,7 +1,7 @@
 import type { ContactContent } from "@/types/content.types"
 
 export const contact: ContactContent = {
-  email: "yourorganization@gmail.com",
+  email: "rotaractthanenorthend@gmail.com",
   phone: "+91 XXXXX XXXXX",
   location: "Thane, Maharashtra, India",
   socials: [

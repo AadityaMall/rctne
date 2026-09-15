@@ -65,13 +65,6 @@ export interface Project {
   instagramUrl?: string
 }
 
-// Testimonials
-export interface Testimonial {
-  quote: string
-  name: string
-  role: string
-}
-
 // Calendar
 export interface CalendarSection {
   number: string

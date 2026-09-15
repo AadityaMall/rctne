@@ -61,6 +61,7 @@ export function Navbar() {
   const [navLinks, setNavLinks] = useState<NavLink[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [prevPathname, setPrevPathname] = useState<string | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -75,9 +76,12 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
+  // Close the mobile drawer when the route changes — adjusted during render
+  // (not in an effect) per React's guidance on resetting state from a prop change.
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
     setMobileOpen(false);
-  }, [pathname]);
+  }
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";

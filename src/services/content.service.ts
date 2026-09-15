@@ -5,7 +5,6 @@ import { partners } from "@/data/partners.data"
 import { about } from "@/data/about.data"
 import { aboutPage } from "@/data/about-page.data"
 import { projects } from "@/data/projects.data"
-import { testimonials } from "@/data/testimonials.data"
 import { calendar } from "@/data/calendar.data"
 import { moreAbout } from "@/data/more-about.data"
 import { contact, closing } from "@/data/contact.data"
@@ -18,7 +17,6 @@ import type {
   AboutContent,
   AboutPageContent,
   Project,
-  Testimonial,
   CalendarSection,
   MoreAboutContent,
   ContactContent,
@@ -34,7 +32,6 @@ export const contentService = {
   getAbout: (): Promise<AboutContent> => Promise.resolve(about),
   getAboutPage: (): Promise<AboutPageContent> => Promise.resolve(aboutPage),
   getProjects: (): Promise<Project[]> => Promise.resolve(projects),
-  getTestimonials: (): Promise<Testimonial[]> => Promise.resolve(testimonials),
   getCalendar: (): Promise<CalendarSection> => Promise.resolve(calendar),
   getMoreAbout: (): Promise<MoreAboutContent> => Promise.resolve(moreAbout),
   getContact: (): Promise<ContactContent> => Promise.resolve(contact),

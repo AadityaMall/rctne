@@ -8,7 +8,29 @@ import { ContactForm } from "@/components/features/contact/ContactForm";
 import { siteConfig } from "@/data/site-config.data";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = siteConfig.pages.contact;
+export const metadata: Metadata = {
+  title: siteConfig.pages.contact.title,
+  description: siteConfig.pages.contact.description,
+  keywords: siteConfig.pages.contact.keywords,
+  alternates: {
+    canonical: `${siteConfig.siteUrl}${siteConfig.pages.contact.path}`,
+  },
+  openGraph: {
+    title: siteConfig.pages.contact.title,
+    description: siteConfig.pages.contact.description,
+    url: `${siteConfig.siteUrl}${siteConfig.pages.contact.path}`,
+    siteName: siteConfig.siteName,
+    locale: siteConfig.locale,
+    type: "website",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: siteConfig.pages.contact.title }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.pages.contact.title,
+    description: siteConfig.pages.contact.description,
+    images: ["/opengraph-image"],
+  },
+};
 
 export default async function ContactPage() {
   const contact = await contentService.getContact();
